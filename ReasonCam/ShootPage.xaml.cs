@@ -425,7 +425,7 @@ namespace ReasonCam
 
            this.showCurrentSequence();
 
-       //    this.generateGif();
+     //      this.generateGif();
         }
 
         private async void generateGif()
@@ -441,10 +441,9 @@ namespace ReasonCam
                 break;
             }
 
-            byte[] imageBytes = await ImageController.ReadFile(currFile);
-
             GifMaker gm = new GifMaker(640, 480);
-            gm.AppendNewFrame(imageBytes);
+            gm.AppenFrameImage(await ImageController.GetImage(currFile));
+
             StorageFile storageFile = await KnownFolders.PicturesLibrary.CreateFileAsync("thegif.gif", CreationCollisionOption.ReplaceExisting);
             gm.GenerateAsync(storageFile,20);
         }
@@ -499,7 +498,7 @@ namespace ReasonCam
 
         #endregion
 
-#region sequence + screen saver methods
+        #region sequence + screen saver methods
 
         DispatcherTimer MessageTimer = new DispatcherTimer();
         DispatcherTimer ReturnTimer = new DispatcherTimer();
@@ -591,23 +590,23 @@ namespace ReasonCam
             StartTimers();
         }
 
+        #region AppBar methods
+
         void CommsHelper_goHome(object sender)
         {
             this.showView(ViewSelect.Waiting);
         }
-
-        #region AppBar methods
 
         private void newShot(object sender, RoutedEventArgs e)
         {
             this.ClickThroughButton_Click_1(this, null);
         }
 
-        #endregion
-
         private void goHome(object sender, RoutedEventArgs e)
         {
             CommsHelper.sendMessage(CommandMessage.GoHome, null);
         }
+
+        #endregion
     }
 }

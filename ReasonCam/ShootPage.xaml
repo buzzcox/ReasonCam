@@ -11,7 +11,7 @@
         
         <Canvas Name="ShootingView" Visibility="Collapsed" Margin="0,0,0,0">
 
-            <Canvas x:Name="cameraView" Width="1366" RenderTransformOrigin="0.5,0.5">
+            <Canvas x:Name="cameraView" RenderTransformOrigin="0.5,0.5">
                 <CaptureElement x:Name="cameraElement" Width="1366" Margin="0,0,0,0" />
             </Canvas>
 
@@ -20,7 +20,7 @@
                 <TextBlock Name="txtCounter" Width="146" TextWrapping="Wrap" Text="5" FontSize="148" TextAlignment="Center" HorizontalAlignment="Left" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="304" Canvas.Left="70"/>
 
           <!--  </Canvas> -->
-            <Canvas Name="SnapScreen" Height="768" Width="1366" Background="White" Opacity="0" />
+            <Canvas Name="SnapScreen" Background="White" Opacity="0" />
         </Canvas>
 
         <Canvas Name="WaitingView" Visibility="Collapsed">

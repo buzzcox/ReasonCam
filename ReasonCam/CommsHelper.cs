@@ -204,18 +204,18 @@ namespace ReasonCam
 
         static void SA_BroadcastDataArrivedEvent(object sender, SocketData e)
         {
-            //Debug.WriteLine("Broadcast data arrived");
-            //Debug.WriteLine(String.Format("Message received: {0}", e.Message));
-            //Debug.WriteLine(String.Format("Data received: {0}", e.Data));
+            Debug.WriteLine("Broadcast data arrived");
+          //  Debug.WriteLine(String.Format("Message received: {0}", e.Message));
+         //   Debug.WriteLine(String.Format("Data received: {0}", e.Data));
 
             try
             {
-                SocketData sd = SAHelper.DeserializeToSocketData(e.Message);
+             //   SocketData sd = SAHelper.DeserializeToSocketData(e.Message);
 
-                //Debug.WriteLine(String.Format("Message received: {0}", sd.Message));
-                //Debug.WriteLine(String.Format("Data received: {0}", sd.Data));
+                Debug.WriteLine(String.Format("Message received: {0}", e.Message));
+                Debug.WriteLine(String.Format("Data received: {0}", e.Data));
 
-                TransMessage tm = (TransMessage)SAHelper.ByteArrayObjToObject(sd.Data, typeof(TransMessage));
+                TransMessage tm = (TransMessage)SAHelper.ByteArrayObjToObject(e.Data, typeof(TransMessage));
 
                 if (tm != null)
                 {

@@ -7,12 +7,15 @@ using Windows.Storage;
 using System.Collections;
 using Windows.Storage.Streams;
 using System.Diagnostics;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace ReasonCam
 {
     public sealed class GifMaker
     {
-        readonly List<byte[]> frames = new List<byte[]>();
+        readonly List<byte[]> byteframes = new List<byte[]>();
+        readonly List<BitmapImage> imageframes = new List<BitmapImage>();
+
         private readonly uint frameWidth;
         private readonly uint frameHeight;
 
@@ -22,9 +25,14 @@ namespace ReasonCam
             frameHeight = height;
         }
 
-        public void AppendNewFrame([ReadOnlyArray]byte[] frame)
+        public void AppendFrameBytes([ReadOnlyArray]byte[] frame)
         {
-            frames.Add(frame);
+            byteframes.Add(frame);
+        }
+
+        public void AppenFrameImage(BitmapImage image)
+        {
+            imageframes.Add(image);
         }
 
         //public async void generateGif(StorageFile file)
@@ -47,12 +55,12 @@ namespace ReasonCam
 
                 var encoder = await Windows.Graphics.Imaging.BitmapEncoder.CreateAsync(Windows.Graphics.Imaging.BitmapEncoder.GifEncoderId, outStream);
 
-                for (int i = 0; i < frames.Count; i++)
+                for (int i = 0; i < byteframes.Count; i++)
                 {
                     try
                     {
 
-                        var pixels = frames[i];
+                        var pixels = byteframes[i];
                         encoder.SetPixelData(BitmapPixelFormat.Rgba8, BitmapAlphaMode.Ignore,
                                              frameWidth, frameHeight,
                                              92.0, 92.0,
@@ -71,7 +79,7 @@ namespace ReasonCam
                             await encoder.BitmapProperties.SetPropertiesAsync(properties);
                         }
 
-                        if (i < frames.Count - 1)
+                        if (i < byteframes.Count - 1)
                             await encoder.GoToNextFrameAsync();
 
                     }

@@ -63,6 +63,12 @@ namespace ReasonCam
             return bi;
         }
 
+        static async public Task<BitmapImage> GetImage(StorageFile file)
+        {
+            byte[] bytes = await ImageController.ReadFile(file);
+            return ImageController.GetImage(bytes);
+        }
+
         static public async Task<byte[]> ReadFile(StorageFile file)
         {
             byte[] fileBytes = null;
