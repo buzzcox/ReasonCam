@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="ReasonCam.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ReasonCam"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+      
+        <Button Content="Start Streaming!" Name="CaptureButton" HorizontalAlignment="Right" Margin="0,20,20,0" VerticalAlignment="Top" Height="72" Width="220" Click="CaptureButton_Click"/>
+        <Button Content="Take the shot!" x:Name="ShootButton_Copy" HorizontalAlignment="Right" Margin="0,100,20,0" VerticalAlignment="Top" Height="72" Width="220" Click="ShootButton_Copy_Click" />
+       
+        <Canvas x:Name="cameraView" HorizontalAlignment="Left" Height="416" Margin="594,244.381,0,0" VerticalAlignment="Top" Width="600" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Canvas.RenderTransform>
+                <CompositeTransform Rotation="13.705"/>
+            </Canvas.RenderTransform>
+            <CaptureElement x:Name="cameraElement" />
+        </Canvas>
+
+        <Canvas x:Name="photoView" HorizontalAlignment="Left" Height="416" Margin="30,150.381,0,0" VerticalAlignment="Top" Width="600" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Canvas.RenderTransform>
+                <CompositeTransform Rotation="-11.753"/>
+            </Canvas.RenderTransform>
+            <Image x:Name="photoElement" />
+        </Canvas>
+
+        <TextBlock TextWrapping="Wrap" Text="Hello Reason Cam!" Margin="100" HorizontalAlignment="Center" Foreground="#FF7E7171" FontWeight="Bold" FontSize="58" FontFamily="Aharoni"/>
+        <ListView Name="statusList" ScrollViewer.IsScrollInertiaEnabled="True" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="748" Margin="10,10,0,0" VerticalAlignment="Top" Width="753" SelectionMode="None">
+            <x:String>Awaiting status messages ...</x:String>
+        </ListView>
+
+    </Grid>
+</Page>

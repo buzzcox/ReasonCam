@@ -1,0 +1,19 @@
+﻿<Page
+    x:Class="ReasonCam.WaitingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ReasonCam"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="#FF009952">
+        <TextBlock HorizontalAlignment="Left" Margin="55,319,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="150" Width="1043" FontFamily="Segoe UI" FontSize="45">
+        	<Run Text="Get involved!"/>
+        	<LineBreak/>
+        	<Run Text="Touch the screen to take part."/>
+        </TextBlock>
+        <Button Content="Button" Name="ClickThroughButton" HorizontalAlignment="Left" VerticalAlignment="Top" Height="768" Width="1366" Opacity="0" Click="ClickThroughButton_Click_1"/>
+
+    </Grid>
+</Page>
