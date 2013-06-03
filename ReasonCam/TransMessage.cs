@@ -21,10 +21,11 @@ namespace ReasonCam
     {
         public TransMessage() { }
 
-        public TransMessage(CommandMessage command, Object data)
+        public TransMessage(CommandMessage command, Object data, int structureId)
         {
             this.Command = command;
             this.Data = data;
+            this.StructureId = structureId;
         }
 
         [DataMember]
@@ -32,6 +33,9 @@ namespace ReasonCam
 
         [DataMember]
         public Object Data { get; set; }
+
+        [DataMember]
+        public int StructureId { get; set; }
 
         public override string ToString()
         {

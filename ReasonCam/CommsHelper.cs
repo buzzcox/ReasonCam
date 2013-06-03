@@ -17,8 +17,9 @@ namespace ReasonCam
     static class CommsHelper
     {
         static public SAClient saclient = null;
-        static private int CurrentAppID = 1004;
-        static private bool IsConnected = false;
+        static public int CurrentAppID = 1004;
+        static public bool IsConnected = false;
+        static public int CurrentStructureId;
 
         public delegate void commsReadyOnline(object sender);
         static public event commsReadyOnline commsReady;
@@ -38,6 +39,7 @@ namespace ReasonCam
         //    Messenger.Default.Register<string>(this, NotificationId, m => Console.WriteLine("hello world with context: " + m.Context));
 
             saclient = new SAClientWRC.SAClient(CurrentAppID);
+            saclient.InitShareCharmHandler();
 
             saclient.ConnectionStatusEvent += SA_ConnectionStatusEvent;
             saclient.DataArrivedEvent += SA_DataArrivedEvent;
@@ -50,23 +52,27 @@ namespace ReasonCam
             saclient.InitialiseClient();
         }
 
-        static public void Current_Resuming()
+        static public void deconstruct()
         {
-            //We need to tell the server that this APP instance on this machine is now available
-            if (saclient == null)
-                saclient = new SAClientWRC.SAClient(CurrentAppID);
 
-            saclient.InitialiseClient();
+            saclient.ConnectionStatusEvent -= SA_ConnectionStatusEvent;
+            saclient.DataArrivedEvent -= SA_DataArrivedEvent;
+            saclient.BroadcastDataArrivedEvent -= SA_BroadcastDataArrivedEvent;
+            saclient.JSONBroadcastDataArrivedEvent -= SA_JSONBroadcastDataArrivedEvent;
+            saclient.ExceptionEvent -= SA_ExceptionEvent;
+            saclient.DeviceMapUpdatedEvent -= SA_DeviceMapUpdatedEvent;
+            saclient.JSONDeviceMapUpdatedEvent -= SA_JSONDeviceMapUpdatedEvent;
+
+            if (CommsHelper.saclient != null)
+            {
+                CommsHelper.saclient.Dispose();
+                CommsHelper.saclient = null;
+            }
+
+            IsConnected = false;
+            CurrentStructureId = 0;
         }
 
-        static public void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
-        {
-            //We need to tell the server that this APP instance on this machine is no longer running
-            if (saclient != null)
-                saclient.Dispose();
-
-            saclient = null;
-        }
 
         #region SA Client Events
 
@@ -139,11 +145,15 @@ namespace ReasonCam
 
             //    this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             //    {
+
+            if (saclient == null) return;
+
             IsConnected = (e.IsConnected == true) ? true : false;
 
             if (e.IsReadyToConnect == true)
             {
                 Debug.WriteLine("Device id: " + e.CurrentDeviceID + " is ready to connect");
+                CurrentStructureId = e.CurrentStructureID;
                 saclient.Connect();
             }
             else
@@ -162,8 +172,6 @@ namespace ReasonCam
 
             if (e.IsListening == true)
                 Debug.WriteLine("Listening for broadcast");
-            else
-                Debug.WriteLine("not listening");
 
 
             if (e.MessageSent == true)
@@ -219,8 +227,15 @@ namespace ReasonCam
 
                 if (tm != null)
                 {
-                    Debug.WriteLine("RECEIVED MESSAGE - " + tm.ToString());
-                    processMessage(tm);
+                    if (tm.StructureId == CurrentStructureId)
+                    {
+                        Debug.WriteLine("RECEIVED MESSAGE - " + tm.ToString());
+                        processMessage(tm);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Received message but not for this structure");
+                    }
                 }
 
             }
@@ -238,7 +253,7 @@ namespace ReasonCam
         static public void sendMessage(CommandMessage command, Object data)
         {
             if (!IsConnected) return;
-            TransMessage tm = new TransMessage(command, data);
+            TransMessage tm = new TransMessage(command, data, CurrentStructureId);
             Debug.WriteLine("SENDING MESSAGE - " + tm.ToString());
             saclient.SendObject(tm, false);
         }

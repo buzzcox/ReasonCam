@@ -30,8 +30,6 @@ namespace ReasonCam
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
-            this.Resuming += App_Resuming;
         }
 
         /// <summary>
@@ -74,27 +72,49 @@ namespace ReasonCam
             Window.Current.Activate();
         }
 
-        /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
-        /// without knowing whether the application will be terminated or resumed with the contents
-        /// of memory still intact.
-        /// </summary>
-        /// <param name="sender">The source of the suspend request.</param>
-        /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-        //    Messenger.Default.Send<string>("My message", NotificationId);
-            CommsHelper.Current_Suspending(sender, e);
 
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
-            deferral.Complete();
-        }
+        //--------------- NETWORK MANAGMENT --------------------
+        /*
+         void Current_Resuming(object sender, object e)
+{
+    //We need to tell the server that this APP instance on this machine is now available
+    if (CommsHelper.saclient == null)
+    {
+        CommsHelper.saclient = new SAClientWRC.SAClient(CommsHelper.CurrentAppID);
 
-        void App_Resuming(object sender, object e)
-        {
-            CommsHelper.Current_Resuming();
-       //     Messenger.Default.Send<string>("resume app", 1);
-        }
+        CommsHelper.saclient.InitialiseClient();
+    }
+}
+
+void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+{
+    //We need to tell the server that this APP instance on this machine is no longer running
+    if (CommsHelper.saclient != null)
+        CommsHelper.saclient.Dispose();
+
+    CommsHelper.saclient = null;
+}
+
+
+protected override void OnLostFocus(RoutedEventArgs e)
+{
+    //We need to tell the server that this APP instance on this machine is no longer running
+    if (CommsHelper.saclient != null)
+    {
+        CommsHelper.saclient.Dispose();
+        CommsHelper.saclient = null;
+    }
+}
+
+protected override void OnGotFocus(RoutedEventArgs e)
+{
+    if (CommsHelper.saclient == null)
+    {
+        CommsHelper.saclient = new SAClientWRC.SAClient(CommsHelper.CurrentAppID);
+        CommsHelper.saclient.InitialiseClient();
+    }
+}
+*/
+        //-------------------------------------------------------
     }
 }

@@ -47,7 +47,56 @@ namespace ReasonCam
         //    //await encoder.FlushAsync();
         //}
 
-        public IAsyncInfo GenerateAsync(StorageFile file, int delay)
+        public IAsyncInfo GenerateFromBitmapsAsync(StorageFile file, int delay)
+        {
+            return AsyncInfo.Run(async ctx =>
+            {
+                var outStream = await file.OpenAsync(FileAccessMode.ReadWrite);
+
+                var encoder = await Windows.Graphics.Imaging.BitmapEncoder.CreateAsync(Windows.Graphics.Imaging.BitmapEncoder.GifEncoderId, outStream);
+
+                for (int i = 0; i < imageframes.Count; i++)
+                {
+                    try
+                    {
+                        BitmapImage currBM = imageframes[i];
+                        byte[] bitmapBytes = ImageController.convertToBytes(currBM);
+
+                        encoder.SetPixelData(BitmapPixelFormat.Rgba8, BitmapAlphaMode.Ignore,
+                                             (uint)currBM.PixelWidth, (uint)currBM.PixelHeight,
+                                             96.0, 96.0,
+                                             bitmapBytes);
+
+                       /* if (i == 0)
+                        {
+                            var properties = new BitmapPropertySet
+                        {
+                            {
+                                "/grctlext/Delay",
+                                new BitmapTypedValue(delay / 10, PropertyType.UInt16)
+                            }
+                        };
+
+                            await encoder.BitmapProperties.SetPropertiesAsync(properties);
+                        }
+
+                        if (i < byteframes.Count - 1)
+                            await encoder.GoToNextFrameAsync();*/
+
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("exception caught: " + ex.ToString());
+                    }
+                }
+
+                await encoder.FlushAsync();
+                outStream.Dispose();
+            });
+
+        }
+
+        public IAsyncInfo GenerateFromBytesAsync(StorageFile file, int delay)
         {
             return AsyncInfo.Run(async ctx =>
             {

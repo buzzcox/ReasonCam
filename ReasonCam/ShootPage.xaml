@@ -7,34 +7,895 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        
-        <Canvas Name="ShootingView" Visibility="Collapsed" Margin="0,0,0,0">
+    
+    <Page.Resources>
 
-            <Canvas x:Name="cameraView" RenderTransformOrigin="0.5,0.5">
-                <CaptureElement x:Name="cameraElement" Width="1366" Margin="0,0,0,0" />
-            </Canvas>
+        <Storyboard x:Name="ShareAnim">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Share_hint">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuinticEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuinticEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Share_hint">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ToolTipBase">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ShareIconBase">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="share">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="ShareIconMask">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="SwipeTrail">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Hand">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="SwipteToShare">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToolTipBase">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ShareIconBase">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SwipeTrail">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Hand">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.9">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SwipteToShare">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ShareIconMask">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="Hand">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="-66.5723"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="-88.5358"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="-90">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="-90"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="-90"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="ShareIconMask">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="-75">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="-75"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="-75"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <PointAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Path.Data).(PathGeometry.Figures)[0].(PathFigure.Segments)[0].(LineSegment.Point)" Storyboard.TargetName="ShareIconBase">
+                <EasingPointKeyFrame KeyTime="0:0:1.3" Value="75,124"/>
+                <EasingPointKeyFrame KeyTime="0:0:2.3" Value="0,124">
+                    <EasingPointKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingPointKeyFrame.EasingFunction>
+                </EasingPointKeyFrame>
+                <EasingPointKeyFrame KeyTime="0:0:6" Value="0,124"/>
+                <EasingPointKeyFrame KeyTime="0:0:6.4" Value="0,124"/>
+                <EasingPointKeyFrame KeyTime="0:0:7" Value="75,124"/>
+            </PointAnimationUsingKeyFrames>
+            <PointAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Path.Data).(PathGeometry.Figures)[0].(PathFigure.Segments)[1].(LineSegment.Point)" Storyboard.TargetName="ShareIconBase">
+                <EasingPointKeyFrame KeyTime="0:0:1.3" Value="75,0"/>
+                <EasingPointKeyFrame KeyTime="0:0:2.3" Value="0,0">
+                    <EasingPointKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingPointKeyFrame.EasingFunction>
+                </EasingPointKeyFrame>
+                <EasingPointKeyFrame KeyTime="0:0:6" Value="0,0"/>
+                <EasingPointKeyFrame KeyTime="0:0:6.4" Value="0,0"/>
+                <EasingPointKeyFrame KeyTime="0:0:7" Value="75,0"/>
+            </PointAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="share">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="Hand">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="10"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="SwipeTrail">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="17.234">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="17.234"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="17.234"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="SwipeTrail">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="0.7">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="0.7"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="0.7"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SwipeTrail">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="-1.5">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="-1.5"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="-1.5"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="SwipeTrail">
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="Share_hint">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-20"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuinticEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.4" Value="-20">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuinticEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="-20"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
 
-          <!--      <Canvas HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="380" Background="#FF00A19A"> -->
-                <TextBlock Name="snaptext" Text="Snap in ..." Canvas.Left="110" TextWrapping="Wrap" Canvas.Top="268" Width="219" Height="65" FontSize="35" />
-                <TextBlock Name="txtCounter" Width="146" TextWrapping="Wrap" Text="5" FontSize="148" TextAlignment="Center" HorizontalAlignment="Left" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="304" Canvas.Left="70"/>
+        <Storyboard x:Name="StartAnim">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="glowState" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:3.1" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Gesture">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:3.3">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Gesture">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:3.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="Gesture">
+                <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="-27.996">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.6" Value="-27.996"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:3.3" Value="38.002">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="Glow">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="2">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="Glow">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="2">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Glow">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Circlefill">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.15"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
 
-          <!--  </Canvas> -->
-            <Canvas Name="SnapScreen" Background="White" Opacity="0" />
-        </Canvas>
+        <Storyboard x:Name="CountdownAnim" AutoReverse="True">
+            <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="txtCounter" Duration="0:0:1" To="0.2" />
+        </Storyboard>
+
+        <Storyboard x:Name="NewHintAnim">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ShareIconBase">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="HandNew">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SwipteToShareNew">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="newSnapHint">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="newSnapHint">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.1" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.7" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ToolTipBaseNew">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="newSnapHint">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="20"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.1" Value="20"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.7" Value="6.667">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuinticEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="newIconNew">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ShareIconMaskNew">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:1.4">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.1">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:6.7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Collapsed</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+                <DiscreteObjectKeyFrame KeyTime="0:0:7">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <PointAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Path.Data).(PathGeometry.Figures)[0].(PathFigure.Segments)[0].(LineSegment.Point)" Storyboard.TargetName="ShareIconBaseNew">
+                <EasingPointKeyFrame KeyTime="0:0:0.6" Value="75,124"/>
+                <EasingPointKeyFrame KeyTime="0:0:1.4" Value="0,124">
+                    <EasingPointKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingPointKeyFrame.EasingFunction>
+                </EasingPointKeyFrame>
+                <EasingPointKeyFrame KeyTime="0:0:6.1" Value="0,124"/>
+                <EasingPointKeyFrame KeyTime="0:0:6.7" Value="0,124"/>
+                <EasingPointKeyFrame KeyTime="0:0:7" Value="0,124"/>
+            </PointAnimationUsingKeyFrames>
+            <PointAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Path.Data).(PathGeometry.Figures)[0].(PathFigure.Segments)[1].(LineSegment.Point)" Storyboard.TargetName="ShareIconBaseNew">
+                <EasingPointKeyFrame KeyTime="0:0:0.6" Value="75,0"/>
+                <EasingPointKeyFrame KeyTime="0:0:1.4" Value="0,0">
+                    <EasingPointKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingPointKeyFrame.EasingFunction>
+                </EasingPointKeyFrame>
+                <EasingPointKeyFrame KeyTime="0:0:6.1" Value="0,0"/>
+                <EasingPointKeyFrame KeyTime="0:0:6.7" Value="0,0"/>
+                <EasingPointKeyFrame KeyTime="0:0:7" Value="0,0"/>
+            </PointAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="ShareIconMaskNew">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="-75">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.1" Value="-75"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.7" Value="-75"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="HandNew">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="-75">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.1" Value="-75"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.7" Value="-75"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SwipteToShareNew">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.7" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="newIconNew">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuarticEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:6.7" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid Name="karlsgrid" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
         <Canvas Name="WaitingView" Visibility="Collapsed">
 
             <Image x:Name="screensaverView" Width="1366" />
-            <Canvas Name="loadingDisplay" Background="#FF009952" Width="1366" Height="768">
-                <TextBlock HorizontalAlignment="Left" Margin="55,319,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="150" Width="1043" FontFamily="Segoe UI" FontSize="45">
-        	<Run Text="Get involved!"/>
-        	<LineBreak/>
-        	<Run Text="Touch the screen to take part."/>
-                </TextBlock>
-                <ProgressRing Name="waitingRing" IsActive="True" Height="295" Width="333" Foreground="White" Canvas.Left="1012" Canvas.Top="448" />
+            <Canvas Name="loadingDisplay" Background="#FF009952" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" />
+                
+
+            <Canvas Name="glowState">
+                <Ellipse x:Name="Glow" HorizontalAlignment="Center" Height="310" Margin="527,228"  Width="310" StrokeThickness="5" Fill="White" RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <CompositeTransform/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse x:Name="Circle" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF2BB673"/>
+                <Ellipse x:Name="Circlefill" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
+                <Path x:Name="Gesture" Data="F1M1259.4219,559.1055C1259.4219,569.0255,1251.3419,577.1055,1241.4219,577.1055C1231.4919,577.1055,1223.4219,569.0255,1223.4219,559.1055L1223.4219,518.1055C1223.4219,516.4555,1224.7719,515.1055,1226.4219,515.1055C1228.0719,515.1055,1229.4219,516.4555,1229.4219,518.1055L1229.4219,542.1055C1229.4219,543.2055,1230.3219,544.1055,1231.4219,544.1055C1232.5219,544.1055,1233.4219,543.2055,1233.4219,542.1055C1233.4219,540.4555,1234.7719,539.1055,1236.4219,539.1055C1238.0719,539.1055,1239.4219,540.4555,1239.4219,542.1055L1239.4219,545.1055C1239.4219,546.2055,1240.3219,547.1055,1241.4219,547.1055C1242.5219,547.1055,1243.4219,546.2055,1243.4219,545.1055C1243.4219,543.4555,1244.7719,542.1055,1246.4219,542.1055C1248.0719,542.1055,1249.4219,543.4555,1249.4219,545.1055L1249.4219,548.1055C1249.4219,549.2055,1250.3219,550.1055,1251.4219,550.1055C1252.5219,550.1055,1253.4219,549.2055,1253.4219,548.1055C1253.4219,546.4555,1254.7719,545.1055,1256.4219,545.1055C1258.0719,545.1055,1259.4219,546.4555,1259.4219,548.1055z M1256.4219,541.1055C1255.0819,541.1055,1253.8319,541.4855,1252.7619,542.1355C1251.6429,539.7555,1249.2219,538.1055,1246.4219,538.1055C1245.0819,538.1055,1243.8319,538.4855,1242.7619,539.1355C1241.6429,536.7555,1239.2219,535.1055,1236.4219,535.1055C1235.3519,535.1055,1234.3319,535.3455,1233.4219,535.7855L1233.4219,524.5955C1235.8609,522.5755,1237.4219,519.5255,1237.4219,516.1055C1237.4219,510.0255,1232.5019,505.1055,1226.4219,505.1055C1220.3419,505.1055,1215.4219,510.0255,1215.4219,516.1055C1215.4219,519.5255,1216.9829,522.5755,1219.4219,524.5955L1219.4219,559.1055C1219.4219,571.2355,1229.2919,581.1055,1241.4219,581.1055C1253.5519,581.1055,1263.4219,571.2355,1263.4219,559.1055L1263.4219,548.1055C1263.4219,544.2465,1260.2809,541.1055,1256.4219,541.1055" Fill="#FFF1F2F2" Stretch="Fill" RenderTransformOrigin="0.5,0.5" Margin="637,354,633,262" UseLayoutRounding="False" Width="96" HorizontalAlignment="Center" VerticalAlignment="Center" Height="152" Visibility="Collapsed">
+                    <Path.RenderTransform>
+                        <CompositeTransform/>
+                    </Path.RenderTransform>
+                </Path>
             </Canvas>
-            <Button Name="ClickThroughButton" HorizontalAlignment="Left" VerticalAlignment="Top" Height="768" Width="1366" Opacity="0" Click="ClickThroughButton_Click_1" />
+
+            <TextBlock Name="tapScreenText" Height="106" Margin="0,590,0,0" TextWrapping="Wrap" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" FontFamily="Segoe UI Light" Text="Tap the screen to get started" FontSize="58.667" TextAlignment="Center"/>
+            <Button Name="ClickThroughButton" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" Click="ClickThroughButton_Click_1" />
+            <ProgressRing Name="waitingRing" IsActive="True" Height="100" Width="100" Foreground="White" Canvas.Left="1245" Canvas.Top="643" />
+        </Canvas>
+
+        <Canvas Name="ShootingView" Visibility="Collapsed" Margin="0,0,0,0">
+
+            <Canvas x:Name="cameraView" RenderTransformOrigin="0.5,0.5">
+                <CaptureElement x:Name="cameraElement"  Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Margin="0,0,0,0" />
+            </Canvas>
+
+            <Canvas Name="SnapScreen" Background="White"  Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" />
+            
+            <Canvas Name="TimerView">
+
+                <Ellipse x:Name="TimerCircle" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF24627A"/>
+                <Ellipse x:Name="TimerFill" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
+
+                <TextBlock x:Name="txtInfo" FontFamily="Segoe UI Light" Width="255" TextWrapping="Wrap" Text="Ready in..." FontSize="30" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="270" Canvas.Left="555" Height="230" />
+
+                <TextBlock x:Name="txtCounter" FontFamily="Segoe UI Light" Width="255" TextWrapping="Wrap" Text="5" FontSize="200" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="300" Canvas.Left="555" Height="230" />
+ 
+
+            </Canvas>
+
+
 
         </Canvas>
 
@@ -44,14 +905,136 @@
 
         <Canvas Name="SequenceView" Background="#000000" Visibility="Visible">
             <Image x:Name="sequenceElement" Width="1366" />
-            <Canvas Name="SnapMessage" Height="180" Canvas.Top="343" Width="1366" Background="#FF002EA4">
-                <TextBlock  Canvas.Left="73" TextWrapping="Wrap" Canvas.Top="35" Height="122" Width="1161" FontSize="37">
-                	<Run Text="SnapArray will reset in 15 seconds."/>
-                	<LineBreak/>
-                	<Run Text="Touch anywhere to cancel, and return to your SnapArray shot."/>
+            <Canvas Name="SnapMessage" Width="1366" Height="768">
+
+                <Ellipse x:Name="ReturnCircle" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF002EA4"/>
+                <Ellipse x:Name="ReturnFill" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
+
+
+                <TextBlock x:Name="returnText" Width="230" FontFamily="Segoe UI Light" TextWrapping="Wrap" FontSize="22" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="290" Canvas.Left="570" Height="65" >
+            	<Run Text="Your Snap Array will reset in"/>
                 </TextBlock>
+                <TextBlock x:Name="returnTextCounter" FontFamily="Segoe UI Light" Width="175" TextWrapping="Wrap" FontSize="70" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="355" Canvas.Left="595" Height="65" Text="15" />
+                <TextBlock x:Name="returnText_Copy1" FontFamily="Segoe UI Light" Width="230" TextWrapping="Wrap" Text="Tap anywhere to dismiss." FontSize="20" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="440" Canvas.Left="570" Height="45" />
+
+
             </Canvas>
-            <Button Name="CancelButton" HorizontalAlignment="Left" VerticalAlignment="Top" Height="768" Width="1366" Opacity="0" Click="CancelButton_Click" />
+
+            <Canvas x:Name="Share_hint" Margin="1152,226,0,420" RenderTransformOrigin="0.5,0.5" Opacity="0" Visibility="Collapsed">
+                <Canvas.RenderTransform>
+                    <CompositeTransform/>
+                </Canvas.RenderTransform>
+                <Path x:Name="ToolTipBase" Data="F1M1288.0313,618.1836L1084.2253,618.1836L1084.2253,494.5276L1288.0313,494.5276L1288.0313,546.6136L1298.0313,556.3556L1288.0313,567.1716z" Fill="#FF2BB673" Height="124" Canvas.Left="0" Stretch="Fill" Canvas.Top="-1.5" Width="214" UseLayoutRounding="False" Visibility="Collapsed"/>
+                <Path x:Name="ShareIconBase" Fill="#FF20A060" Height="124" Canvas.Left="124.999" Canvas.Top="-1.518" Width="89.001" UseLayoutRounding="False" Visibility="Collapsed">
+                    <Path.Data>
+                        <PathGeometry FillRule="Nonzero">
+                            <PathFigure IsClosed="True" StartPoint="78.9786,124">
+                                <LineSegment Point="75,124"/>
+                                <LineSegment Point="75,0"/>
+                                <LineSegment Point="78.9786,0"/>
+                                <LineSegment Point="78.9786,52.2309"/>
+                                <LineSegment Point="89.0007,62"/>
+                                <LineSegment Point="78.9786,72.8461"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+
+                <Path x:Name="share" Data="M6.71198,20.5256 C8.93034,20.574 11.0703,21.7267 12.2613,23.7548 C14.0598,26.8185 13.0147,30.7248 9.93409,32.5305 C10.2166,33.1808 10.5265,33.8212 10.891,34.4437 C14.4831,40.5601 21.409,43.9494 28.5404,43.0809 C29.7355,42.9425 30.8342,43.7721 30.9831,44.9544 C31.132,46.1336 30.2793,47.2103 29.0782,47.3567 C28.1566,47.4682 27.2361,47.524 26.3237,47.524 C18.4499,47.524 11.1068,43.4235 7.09747,36.596 C6.48481,35.5503 5.96424,34.4696 5.53886,33.3641 C3.65227,33.0673 1.91144,31.9717 0.881426,30.2168 C-0.933334,27.1253 0.144272,23.1752 3.2866,21.3914 C4.36648,20.7778 5.54998,20.5002 6.71198,20.5256 z M43.944,10.8558 C44.0063,10.8533 44.0686,10.8534 44.1307,10.8561 C44.7696,10.8834 45.3914,11.1798 45.8072,11.7179 C51.2766,18.8046 51.8793,28.3479 47.3433,36.0335 C46.722,37.0875 46.0198,38.0782 45.2488,39.0026 C45.9417,40.774 45.8452,42.8227 44.8021,44.5942 C42.9612,47.712 38.8861,48.7791 35.7023,46.9795 C32.5154,45.179 31.425,41.192 33.2627,38.0732 C35.0862,34.9825 39.1038,33.9114 42.2774,35.6456 C42.7128,35.0759 43.1296,34.4861 43.4992,33.8592 C47.14,27.6898 46.6554,20.0273 42.2641,14.3373 C41.5247,13.3798 41.7189,12.0173 42.6974,11.2939 C43.0727,11.0161 43.5081,10.873 43.944,10.8558 z M34.3985,0 C37.9326,0 40.797,2.98197 40.797,6.65763 C40.797,10.3343 37.9326,13.3163 34.3985,13.3163 C30.8949,13.3163 28.0542,10.3845 28.004,6.75302 C27.3095,6.66584 26.6083,6.60834 25.8981,6.60834 C18.9028,6.60834 12.6217,10.9397 9.89439,17.6455 C9.55016,18.4911 8.76114,19 7.92963,19 C7.65246,19 7.37035,18.9436 7.09908,18.8235 C6.01411,18.3464 5.50708,17.0452 5.96679,15.9154 C9.36184,7.56578 17.1856,2.17028 25.8981,2.17028 C27.0935,2.17028 28.2732,2.27086 29.4292,2.4679 C30.602,0.963572 32.3923,0 34.3985,0 z" Fill="#FFF1F2F2" Height="47.854" Canvas.Left="137.356" Stretch="Fill" Canvas.Top="36.471" UseLayoutRounding="False" Width="50.37" Visibility="Collapsed"/>
+
+                <Rectangle x:Name="ShareIconMask" Fill="#FF2BB673" Height="83" Canvas.Left="130" Canvas.Top="11" Width="70" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+                    <Rectangle.RenderTransform>
+                        <CompositeTransform/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <Path x:Name="SwipeTrail" Data="M3.33333,0 L9,4.66665 L9,5.33335 L3.33333,10 z" Height="10" Canvas.Left="151.667" Stretch="Fill" Canvas.Top="16" Width="5.667" UseLayoutRounding="False" RenderTransformOrigin="1,0.5" Visibility="Collapsed">
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.617,0.5" StartPoint="-0.029,0.5">
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                    <Path.RenderTransform>
+                        <CompositeTransform/>
+                    </Path.RenderTransform>
+                </Path>
+
+                <Path x:Name="Hand" Data="F1M1259.4219,559.1055C1259.4219,569.0255,1251.3419,577.1055,1241.4219,577.1055C1231.4919,577.1055,1223.4219,569.0255,1223.4219,559.1055L1223.4219,518.1055C1223.4219,516.4555,1224.7719,515.1055,1226.4219,515.1055C1228.0719,515.1055,1229.4219,516.4555,1229.4219,518.1055L1229.4219,542.1055C1229.4219,543.2055,1230.3219,544.1055,1231.4219,544.1055C1232.5219,544.1055,1233.4219,543.2055,1233.4219,542.1055C1233.4219,540.4555,1234.7719,539.1055,1236.4219,539.1055C1238.0719,539.1055,1239.4219,540.4555,1239.4219,542.1055L1239.4219,545.1055C1239.4219,546.2055,1240.3219,547.1055,1241.4219,547.1055C1242.5219,547.1055,1243.4219,546.2055,1243.4219,545.1055C1243.4219,543.4555,1244.7719,542.1055,1246.4219,542.1055C1248.0719,542.1055,1249.4219,543.4555,1249.4219,545.1055L1249.4219,548.1055C1249.4219,549.2055,1250.3219,550.1055,1251.4219,550.1055C1252.5219,550.1055,1253.4219,549.2055,1253.4219,548.1055C1253.4219,546.4555,1254.7719,545.1055,1256.4219,545.1055C1258.0719,545.1055,1259.4219,546.4555,1259.4219,548.1055z M1256.4219,541.1055C1255.0819,541.1055,1253.8319,541.4855,1252.7619,542.1355C1251.6429,539.7555,1249.2219,538.1055,1246.4219,538.1055C1245.0819,538.1055,1243.8319,538.4855,1242.7619,539.1355C1241.6429,536.7555,1239.2219,535.1055,1236.4219,535.1055C1235.3519,535.1055,1234.3319,535.3455,1233.4219,535.7855L1233.4219,524.5955C1235.8609,522.5755,1237.4219,519.5255,1237.4219,516.1055C1237.4219,510.0255,1232.5019,505.1055,1226.4219,505.1055C1220.3419,505.1055,1215.4219,510.0255,1215.4219,516.1055C1215.4219,519.5255,1216.9829,522.5755,1219.4219,524.5955L1219.4219,559.1055C1219.4219,571.2355,1229.2919,581.1055,1241.4219,581.1055C1253.5519,581.1055,1263.4219,571.2355,1263.4219,559.1055L1263.4219,548.1055C1263.4219,544.2465,1260.2809,541.1055,1256.4219,541.1055" Fill="#FFF1F2F2" Height="76" Canvas.Left="131.197" Stretch="Fill" Canvas.Top="10.578" Width="48" RenderTransformOrigin="0.5,0" Visibility="Collapsed">
+                    <Path.Projection>
+                        <PlaneProjection/>
+                    </Path.Projection>
+                    <Path.RenderTransform>
+                        <CompositeTransform/>
+                    </Path.RenderTransform>
+                </Path>
+
+                <TextBlock x:Name="SwipteToShare" Height="20" TextWrapping="Wrap" Text="Swipe to share" Canvas.Top="97" Width="110" FontFamily="Segoe UI Light" FontSize="16" Canvas.Left="9" Visibility="Collapsed"/>
+
+            </Canvas>
+
+
+            <Canvas x:Name="newSnapHint" RenderTransformOrigin="0.5,0.5" Width="124" Height="214" VerticalAlignment="Bottom" HorizontalAlignment="Right" Visibility="Collapsed" Opacity="0" Canvas.Left="1232" Canvas.Top="530">
+                <Canvas.RenderTransform>
+                    <CompositeTransform/>
+                </Canvas.RenderTransform>
+                <Path x:Name="ToolTipBaseNew" Data="F1M1288.0313,618.1836L1084.2253,618.1836L1084.2253,494.5276L1288.0313,494.5276L1288.0313,546.6136L1298.0313,556.3556L1288.0313,567.1716z" Fill="#FF2BB673" Height="124" Canvas.Left="-45" Stretch="Fill" Canvas.Top="45.5" Width="214" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+                    <Path.RenderTransform>
+                        <CompositeTransform Rotation="90" TranslateX="-0.009" TranslateY="-0.009"/>
+                    </Path.RenderTransform>
+                </Path>
+                <Path x:Name="ShareIconBaseNew" Fill="#FF20A060" Height="124" Canvas.Left="79.999" Canvas.Top="45.482" Width="89.001" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+                    <Path.RenderTransform>
+                        <CompositeTransform Rotation="90" TranslateX="-62.491" TranslateY="62.509"/>
+                    </Path.RenderTransform>
+                    <Path.Data>
+                        <PathGeometry FillRule="Nonzero">
+                            <PathFigure IsClosed="True" StartPoint="78.9786,124">
+                                <LineSegment Point="75,124"/>
+                                <LineSegment Point="75,0"/>
+                                <LineSegment Point="78.9786,0"/>
+                                <LineSegment Point="78.9786,52.2309"/>
+                                <LineSegment Point="89.0007,62"/>
+                                <LineSegment Point="78.9786,72.8461"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Grid x:Name="newIconNew" Height="48" Canvas.Left="40" Canvas.Top="140" Width="48" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <CompositeTransform/>
+                    </Grid.RenderTransform>
+                    <Ellipse Stroke="White" StrokeThickness="2" StrokeDashCap="Round"/>
+                    <Path Data="M1219,352.5 L1219,368.258" HorizontalAlignment="Center" Height="20" Stretch="Fill" Stroke="White" UseLayoutRounding="False" VerticalAlignment="Center" Width="2" StrokeThickness="2" StrokeDashCap="Round" Margin="0"/>
+                    <Path Data="M1225,360.5 L1212.41,360.5" HorizontalAlignment="Center" Height="2" Stretch="Fill" Stroke="White" UseLayoutRounding="False" VerticalAlignment="Center" Width="20" StrokeThickness="2" StrokeDashCap="Round" Margin="0"/>
+
+                </Grid>
+                <Rectangle x:Name="ShareIconMaskNew" Fill="#FF2BB673" Height="55" Canvas.Left="27" Canvas.Top="134" Width="70" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+                    <Rectangle.RenderTransform>
+                        <CompositeTransform/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <Path x:Name="HandNew" Data="F1M1259.4219,559.1055C1259.4219,569.0255,1251.3419,577.1055,1241.4219,577.1055C1231.4919,577.1055,1223.4219,569.0255,1223.4219,559.1055L1223.4219,518.1055C1223.4219,516.4555,1224.7719,515.1055,1226.4219,515.1055C1228.0719,515.1055,1229.4219,516.4555,1229.4219,518.1055L1229.4219,542.1055C1229.4219,543.2055,1230.3219,544.1055,1231.4219,544.1055C1232.5219,544.1055,1233.4219,543.2055,1233.4219,542.1055C1233.4219,540.4555,1234.7719,539.1055,1236.4219,539.1055C1238.0719,539.1055,1239.4219,540.4555,1239.4219,542.1055L1239.4219,545.1055C1239.4219,546.2055,1240.3219,547.1055,1241.4219,547.1055C1242.5219,547.1055,1243.4219,546.2055,1243.4219,545.1055C1243.4219,543.4555,1244.7719,542.1055,1246.4219,542.1055C1248.0719,542.1055,1249.4219,543.4555,1249.4219,545.1055L1249.4219,548.1055C1249.4219,549.2055,1250.3219,550.1055,1251.4219,550.1055C1252.5219,550.1055,1253.4219,549.2055,1253.4219,548.1055C1253.4219,546.4555,1254.7719,545.1055,1256.4219,545.1055C1258.0719,545.1055,1259.4219,546.4555,1259.4219,548.1055z M1256.4219,541.1055C1255.0819,541.1055,1253.8319,541.4855,1252.7619,542.1355C1251.6429,539.7555,1249.2219,538.1055,1246.4219,538.1055C1245.0819,538.1055,1243.8319,538.4855,1242.7619,539.1355C1241.6429,536.7555,1239.2219,535.1055,1236.4219,535.1055C1235.3519,535.1055,1234.3319,535.3455,1233.4219,535.7855L1233.4219,524.5955C1235.8609,522.5755,1237.4219,519.5255,1237.4219,516.1055C1237.4219,510.0255,1232.5019,505.1055,1226.4219,505.1055C1220.3419,505.1055,1215.4219,510.0255,1215.4219,516.1055C1215.4219,519.5255,1216.9829,522.5755,1219.4219,524.5955L1219.4219,559.1055C1219.4219,571.2355,1229.2919,581.1055,1241.4219,581.1055C1253.5519,581.1055,1263.4219,571.2355,1263.4219,559.1055L1263.4219,548.1055C1263.4219,544.2465,1260.2809,541.1055,1256.4219,541.1055" Fill="#FFF1F2F2" Height="76" Canvas.Left="37.999" Stretch="Fill" Canvas.Top="113.575" Width="48" RenderTransformOrigin="0.5,0" UseLayoutRounding="False" Visibility="Collapsed">
+                    <Path.Projection>
+                        <PlaneProjection/>
+                    </Path.Projection>
+                    <Path.RenderTransform>
+                        <CompositeTransform/>
+                    </Path.RenderTransform>
+                </Path>
+
+                <TextBlock x:Name="SwipteToShareNew" Height="20" TextWrapping="Wrap" Text="Create New ..." Canvas.Top="8" Width="110" FontFamily="Segoe UI Light" FontSize="16" Canvas.Left="9" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+                    <TextBlock.RenderTransform>
+                        <CompositeTransform/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+
+            </Canvas>
+
+            <Button Name="CancelButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" Click="CancelButton_Click" />
+
+
+
         </Canvas>
 
     </Grid>

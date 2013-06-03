@@ -23,6 +23,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
 using SAClientWRC;
+using Windows.ApplicationModel.DataTransfer;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -48,7 +49,7 @@ namespace ReasonCam
         int photoCount = 0;
         String photoId = "photo_sequence";
 
-        String folderPrefix = "ReasonSnap";
+        String folderPrefix = "SnapReload";
         StorageFolder currentFolder;
 
         int NumberOfPhotos = 8;
@@ -64,14 +65,56 @@ namespace ReasonCam
             showView(ViewSelect.Waiting);
 
             CommsHelper.Initialize();
+            CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
 
             CommsHelper.commsReady += client_commsReady;
             CommsHelper.snapTake += client_snapAction;
             CommsHelper.goHome += CommsHelper_goHome;
             CommsHelper.stopReturn += CommsHelper_stopReturn;
 
+
             EnumerateWebcamsAsync();
+
+            Application.Current.Suspending += Current_Suspending;
+            Application.Current.Resuming += Current_Resuming;
+
+
         }
+
+        void Current_Resuming(object sender, object e)
+        {
+            //We need to tell the server that this APP instance on this machine is now available
+            CommsHelper.Initialize();
+        }
+
+        void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {            
+            //We need to tell the server that this APP instance on this machine is no longer running
+            CommsHelper.deconstruct();
+        }
+
+        //protected override void OnLostFocus(RoutedEventArgs e)
+        //{
+        //    base.OnLostFocus(e);
+        //    //We need to tell the server that this APP instance on this machine is no longer running
+        //    CommsHelper.deconstruct();
+
+        //}
+
+        //protected override void OnGotFocus(RoutedEventArgs e)
+        //{
+        //    base.OnGotFocus(e);
+
+        //    //We need to tell the server that this APP instance on this machine is now available
+        //    CommsHelper.Initialize();
+
+        //    CommsHelper.commsReady += client_commsReady;
+        //    CommsHelper.snapTake += client_snapAction;
+        //    CommsHelper.goHome += CommsHelper_goHome;
+        //    CommsHelper.stopReturn += CommsHelper_stopReturn;
+        //    CommsHelper.saclient.InitShareCharmHandler();
+        //    CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
+        //}
 
         public async Task<int> totalShots()
         {
@@ -157,23 +200,85 @@ namespace ReasonCam
 
         }
 
+        private async Task<String> getCurrentSnapFolder()
+        {
+            List<StorageFolder> folders = await folderList();
+
+            if (folders.Count == 0) return String.Format("{0}_0", folderPrefix);
+
+            int topFolderNumber = 0;
+
+            for (int i = 0; i < folders.Count; i++)
+            {
+                try
+                {
+                    int folderNum = Convert.ToInt32(folders[i].Name.Replace(String.Format("{0}_", folderPrefix), ""));
+                    topFolderNumber = Math.Max(topFolderNumber, folderNum);
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("Can't get folder number, possible a custom folder has been place without app management");
+                }
+            }
+
+            return String.Format("{0}_{1}", folderPrefix, topFolderNumber);
+        }
+
+        private async Task<String> getNextSnapFolder()
+        {
+            List<StorageFolder> folders = await folderList();
+
+            if (folders.Count == 0) return String.Format("{0}_0", folderPrefix);
+
+            int topFolderNumber = 0;
+
+            for (int i = 0; i < folders.Count; i++)
+            {
+                try
+                {
+                    int folderNum = Convert.ToInt32(folders[i].Name.Replace(String.Format("{0}_", folderPrefix), ""));
+                    topFolderNumber = Math.Max(topFolderNumber, folderNum);
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("Can't get folder number, possible a custom folder has been place without app management");
+                }
+            }
+
+            string nextSnapFolder = String.Format("{0}_{1}", folderPrefix, (topFolderNumber + 1));
+
+            Debug.WriteLine("next folder: {0}", nextSnapFolder);
+
+            return String.Format(nextSnapFolder);
+        }
+
         #endregion
 
         #region waiting page controls
 
         DispatcherTimer screenSaverTimer = null;
+        DispatcherTimer glowTapTimer = null;
         private async void startScreenSaver()
         {
+            StartAnim.Begin();
+            loadingDisplay.Opacity = 1.0;
             if (screenSaverTimer != null)
             {
                 screenSaverTimer.Stop();
                 screenSaverTimer = null;
+                glowTapTimer.Stop();
+                glowTapTimer = null;
             }
 
             Random rnd = new Random();
+
             screenSaverTimer = new DispatcherTimer();
             screenSaverTimer.Tick += screenSaverTimer_tick;
             screenSaverTimer.Interval = new TimeSpan(0, 0, rnd.Next(8, 25));
+
+            glowTapTimer = new DispatcherTimer();
+            glowTapTimer.Tick += glowTapTimer_tick;
+            glowTapTimer.Interval = new TimeSpan(0, 0, rnd.Next(5, 15));
             
             screenSaverMode = false;
 
@@ -184,6 +289,8 @@ namespace ReasonCam
             {
                 screenSaverTimer.Start();
             }
+
+            glowTapTimer.Start();
         }
 
         private void stopScreenSaver()
@@ -195,12 +302,19 @@ namespace ReasonCam
             {
                 screenSaverTimer.Stop();
                 screenSaverTimer = null;
+                glowTapTimer.Stop();
+                glowTapTimer = null;
             }
             // stop timers here
             screensaverView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             loadingDisplay.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
+        private void glowTapTimer_tick(object sender, object e)
+        {
+            StartAnim.Begin();
+        }
+        
         private async void screenSaverTimer_tick(object sender, object e)
         {
             if (screenSaverMode)    // show waiting screen
@@ -211,6 +325,7 @@ namespace ReasonCam
                 // start timers here to scroll through sequence
                 screensaverView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 loadingDisplay.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                tapScreenText.Visibility = Visibility.Visible;
                 loadingDisplay.Opacity = 1.0;
             }
             else // show screen saver
@@ -220,6 +335,7 @@ namespace ReasonCam
                 // start timers here to scroll through sequence
                 screensaverView.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 loadingDisplay.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                tapScreenText.Visibility = Visibility.Collapsed;
                 loadingDisplay.Opacity = 0.6;
 
                 Random rnd = new Random();
@@ -242,18 +358,6 @@ namespace ReasonCam
         }
 
         #endregion
-
-        private async Task<String> getCurrentSnapFolder()
-        {
-            int numFolders = await totalShots();
-            return String.Format("{0}_{1}", folderPrefix, (numFolders-1).ToString());
-        }
-
-        private async Task<String> getNextSnapFolder()
-        {
-            int numFolders = await totalShots();
-            return String.Format("{0}_{1}", folderPrefix, numFolders.ToString());
-        }
 
         #region Client control methods
 
@@ -343,6 +447,7 @@ namespace ReasonCam
             currentFolder = await Windows.Storage.KnownFolders.PicturesLibrary.CreateFolderAsync(await this.getNextSnapFolder(), CreationCollisionOption.ReplaceExisting);
 
             counter = 5;
+            this.TimerView.Visibility = Visibility.Visible;
             this.txtCounter.Visibility = Visibility.Visible;
             this.txtCounter.Text = counter.ToString();
 
@@ -350,18 +455,24 @@ namespace ReasonCam
             TextCountDownTrm.Tick += TextCountDownTrm_Tick;
             TextCountDownTrm.Interval = new TimeSpan(0, 0, 1);
             TextCountDownTrm.Start();
+
+            txtCounter.RenderTransform = new ScaleTransform();
+            CountdownAnim.Begin();
         }
 
         void TextCountDownTrm_Tick(object sender, object e)
         {
             counter--;
             this.txtCounter.Text = counter.ToString();
+            this.txtCounter.Opacity = 1.0;
+            CountdownAnim.Begin();
 
             if (counter <= 0)   // we've hit the timer, stop counting
             {
                 DispatcherTimer tmr = (DispatcherTimer)sender;
                 tmr.Stop();
                 this.txtCounter.Visibility = Visibility.Collapsed;
+                this.TimerView.Visibility = Visibility.Collapsed;
 
                 photoCount = 0;
                 DispatcherTimer ShootTimer = new DispatcherTimer();
@@ -425,7 +536,7 @@ namespace ReasonCam
 
            this.showCurrentSequence();
 
-     //      this.generateGif();
+   //        this.generateGif();
         }
 
         private async void generateGif()
@@ -441,11 +552,11 @@ namespace ReasonCam
                 break;
             }
 
-            GifMaker gm = new GifMaker(640, 480);
+            GifMaker gm = new GifMaker(800, 600);
             gm.AppenFrameImage(await ImageController.GetImage(currFile));
 
             StorageFile storageFile = await KnownFolders.PicturesLibrary.CreateFileAsync("thegif.gif", CreationCollisionOption.ReplaceExisting);
-            gm.GenerateAsync(storageFile,20);
+            gm.GenerateFromBitmapsAsync(storageFile,20);
         }
 
         private async Task<Windows.Storage.StorageFile> ReencodePhotoAsync(Windows.Storage.StorageFile tempStorageFile, Windows.Storage.FileProperties.PhotoOrientation photoRotation)
@@ -502,17 +613,25 @@ namespace ReasonCam
 
         DispatcherTimer MessageTimer = new DispatcherTimer();
         DispatcherTimer ReturnTimer = new DispatcherTimer();
+        DispatcherTimer ShareTimer = new DispatcherTimer();
+        DispatcherTimer ReturnCounterTimer = new DispatcherTimer();
+        int returnCounter = 15;
         private void StartTimers()
         {
-
             MessageTimer.Stop();
             ReturnTimer.Stop();
+            ShareTimer.Stop();
+            ReturnCounterTimer.Stop();
 
             MessageTimer = null;
             ReturnTimer = null;
+            ShareTimer = null;
+            ReturnCounterTimer = null;
 
+            ShareTimer = new DispatcherTimer();
             MessageTimer = new DispatcherTimer();
             ReturnTimer = new DispatcherTimer();
+            ReturnCounterTimer = new DispatcherTimer();
 
             MessageTimer.Tick += MessageTimer_Tick;
             MessageTimer.Interval = TimeSpan.FromSeconds(45);
@@ -521,19 +640,46 @@ namespace ReasonCam
             ReturnTimer.Tick += ReturnTimer_Tick;
             ReturnTimer.Interval = TimeSpan.FromSeconds(60);
             ReturnTimer.Start();
+
+            ShareTimer.Tick += ShareTimer_Tick;
+            Random rnd = new Random();
+            ShareTimer.Interval = TimeSpan.FromSeconds(rnd.Next(7,14));
+            ShareTimer.Start();
+
+            returnCounter = 15;
+            ReturnCounterTimer.Tick += ReturnCounterTimer_Tick;
+            ReturnCounterTimer.Interval = TimeSpan.FromSeconds(1);
         }
 
         private void MessageTimer_Tick(object sender, object e)
         {
             SnapMessage.Visibility = Visibility.Visible;
             CancelButton.IsEnabled = true;
+
+            returnTextCounter.Text = returnCounter.ToString();
+            ReturnCounterTimer.Start();
+        }
+
+        void ReturnCounterTimer_Tick(object sender, object e)
+        {
+            returnCounter--;
+            returnTextCounter.Text = returnCounter.ToString();
         }
 
         private void ReturnTimer_Tick(object sender, object e)
         {
             MessageTimer.Stop();
             ReturnTimer.Stop();
+            ShareTimer.Stop();
+            ReturnCounterTimer.Stop();
             showView(ViewSelect.Waiting);
+        }
+
+        private void ShareTimer_Tick(object sender, object e)
+        {
+        //    Share_hint.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            ShareAnim.Begin();
+            NewHintAnim.Begin();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -546,6 +692,8 @@ namespace ReasonCam
         {
             stopSequence = false;
             this.showSequenceForFolder(currentFolder, true);
+
+
             StartTimers();
         }
 
@@ -562,9 +710,7 @@ namespace ReasonCam
             {
                 StorageFile currFile = await sf.GetFileAsync(snapList[i].Name);
 
-                IRandomAccessStream photoStream = await currFile.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                BitmapImage bmpimg = new BitmapImage();
-                bmpimg.SetSource(photoStream);
+                BitmapImage bmpimg = await ImageController.GetImage(currFile);
                 sequenceElement.Source = bmpimg;
                 screensaverView.Source = bmpimg;
 
@@ -579,9 +725,6 @@ namespace ReasonCam
             if (repeat) this.showSequenceForFolder(sf,repeat);
         }
 
-#endregion
-
-
         void CommsHelper_stopReturn(object sender)
         {
             Debug.WriteLine("stop sequence selected");
@@ -589,6 +732,43 @@ namespace ReasonCam
 
             StartTimers();
         }
+
+#endregion
+
+        #region Share functions
+
+        async void component_ShareDataRequested(object sender, ShareInfo e)
+        {
+            try
+            {
+                // FB details
+                e.FacebookCredentials = new Credentials("test@withreason.co.uk", "CheeseFlute-71");
+
+                e.FacbookPageID = "393352484117082";
+
+                // Twitter details 
+                e.TwitterCredentials = new Credentials("reasonsoftarray", "CheeseFlute-71");
+
+                IReadOnlyList<IStorageItem> snapList = await this.currentFolder.GetItemsAsync();
+                StorageFile currFile = await this.currentFolder.GetFileAsync(snapList[0].Name); //<-- get current folder
+
+                RandomAccessStreamReference imageStreamRef = RandomAccessStreamReference.CreateFromFile(currFile);
+                e.ImageStream = imageStreamRef;
+
+                //    e.TextData = "";
+
+                e.Complete();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+ 
+        #endregion
 
         #region AppBar methods
 

@@ -65,8 +65,11 @@ namespace ReasonCam
 
         static async public Task<BitmapImage> GetImage(StorageFile file)
         {
-            byte[] bytes = await ImageController.ReadFile(file);
-            return ImageController.GetImage(bytes);
+            IRandomAccessStream photoStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+            BitmapImage bmpimg = new BitmapImage();
+            bmpimg.SetSource(photoStream);
+
+            return bmpimg;
         }
 
         static public async Task<byte[]> ReadFile(StorageFile file)
