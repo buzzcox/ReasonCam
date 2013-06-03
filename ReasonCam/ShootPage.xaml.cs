@@ -58,9 +58,13 @@ namespace ReasonCam
         bool stopSequence = false;
         bool screenSaverMode = false;
 
-        public ShootPage()
+        bool reasonScreenSaver = true;
+
+        public  ShootPage()
         {
             this.InitializeComponent();
+
+            setupDefaultShots();
 
             showView(ViewSelect.Waiting);
 
@@ -78,6 +82,29 @@ namespace ReasonCam
             Application.Current.Suspending += Current_Suspending;
             Application.Current.Resuming += Current_Resuming;
 
+
+        }
+
+        public async void setupDefaultShots()
+        {
+            try
+            {
+
+            String defaultFolder = String.Format("{0}_0",folderPrefix);
+            StorageFolder destinationFolder = await Windows.Storage.KnownFolders.PicturesLibrary.CreateFolderAsync(defaultFolder, CreationCollisionOption.ReplaceExisting);
+
+            for (int p = 0; p <= 8; p++)
+            {
+                StorageFile copyFile = await StorageFile.GetFileFromApplicationUriAsync(new System.Uri(String.Format("ms-appx:///Assets/SnapReload_0/photo_sequence_{0}.jpg",p.ToString())));
+                StorageFile destFile = await destinationFolder.CreateFileAsync(copyFile.Name,CreationCollisionOption.ReplaceExisting);
+                await copyFile.CopyAndReplaceAsync(destFile);
+            }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("error copying default images: {0}", ex);
+
+            }
 
         }
 
@@ -274,11 +301,11 @@ namespace ReasonCam
 
             screenSaverTimer = new DispatcherTimer();
             screenSaverTimer.Tick += screenSaverTimer_tick;
-            screenSaverTimer.Interval = new TimeSpan(0, 0, rnd.Next(8, 25));
+            screenSaverTimer.Interval = new TimeSpan(0, 0, rnd.Next(8, 18));
 
             glowTapTimer = new DispatcherTimer();
             glowTapTimer.Tick += glowTapTimer_tick;
-            glowTapTimer.Interval = new TimeSpan(0, 0, rnd.Next(5, 15));
+            glowTapTimer.Interval = new TimeSpan(0, 0, rnd.Next(5, 10));
             
             screenSaverMode = false;
 
@@ -341,9 +368,24 @@ namespace ReasonCam
                 Random rnd = new Random();
                 List<StorageFolder> folders = await folderList();
                 int folderIdx = rnd.Next(folders.Count);
+                StorageFolder toUse = folders[folderIdx];
+
+                if (reasonScreenSaver)
+                {
+                    reasonScreenSaver = false;
+                    for (int i = 0; i < folders.Count; i++)
+                    {
+                        if (folders[i].Name == String.Format("{0}_0", folderPrefix))
+                            toUse = folders[i];
+                    }
+                }
+                else
+                {
+                    reasonScreenSaver = true;
+                }
 
                 stopSequence = false;
-                showSequenceForFolder(folders[folderIdx],true);
+                showSequenceForFolder(toUse,true);
             }
         }
 

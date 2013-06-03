@@ -135,6 +135,15 @@
   <ItemGroup>
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_0.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_1.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_2.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_3.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_4.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_5.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_6.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_7.jpg" />
+    <Content Include="Assets\SnapReload_0\photo_sequence_8.jpg" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Common\ReadMe.txt" />

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="3d4c9dd8-0ec7-4df3-bff3-5674057a2c53" Publisher="CN=Karl" Version="0.9.2.1" />
+  <Identity Name="3d4c9dd8-0ec7-4df3-bff3-5674057a2c53" Publisher="CN=Karl" Version="1.0.0.0" />
   <Properties>
     <DisplayName>Snap Reloaded</DisplayName>
     <PublisherDisplayName>Reason Limited (withreason.co.uk)</PublisherDisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ReasonCam.App">
-      <VisualElements DisplayName="Snap Array" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Array Snap is a fun camera burst sequencer. I allows the user (or users) to capture a short period of time and share it with your friends." ForegroundText="light" BackgroundColor="#000000">
+      <VisualElements DisplayName="Snap Array 1.0" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Snap Array is a fun camera burst sequencer. I allows the user (or users) to capture a short period of time and share it with your friends." ForegroundText="light" BackgroundColor="#000000">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#009952" />
       </VisualElements>
