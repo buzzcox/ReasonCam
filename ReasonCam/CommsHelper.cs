@@ -33,6 +33,9 @@ namespace ReasonCam
         public delegate void stopReturnAction(object sender);
         static public event stopReturnAction stopReturn;
 
+        public delegate void logDebugMessage(String message);
+        static public event logDebugMessage debugMessage;
+
 
         static public void Initialize()
         {
@@ -50,27 +53,6 @@ namespace ReasonCam
             saclient.JSONDeviceMapUpdatedEvent += SA_JSONDeviceMapUpdatedEvent;
 
             saclient.InitialiseClient();
-        }
-
-        static public void deconstruct()
-        {
-
-            saclient.ConnectionStatusEvent -= SA_ConnectionStatusEvent;
-            saclient.DataArrivedEvent -= SA_DataArrivedEvent;
-            saclient.BroadcastDataArrivedEvent -= SA_BroadcastDataArrivedEvent;
-            saclient.JSONBroadcastDataArrivedEvent -= SA_JSONBroadcastDataArrivedEvent;
-            saclient.ExceptionEvent -= SA_ExceptionEvent;
-            saclient.DeviceMapUpdatedEvent -= SA_DeviceMapUpdatedEvent;
-            saclient.JSONDeviceMapUpdatedEvent -= SA_JSONDeviceMapUpdatedEvent;
-
-            if (CommsHelper.saclient != null)
-            {
-                CommsHelper.saclient.Dispose();
-                CommsHelper.saclient = null;
-            }
-
-            IsConnected = false;
-            CurrentStructureId = 0;
         }
 
 
@@ -135,13 +117,13 @@ namespace ReasonCam
 
         static void SA_ExceptionEvent(object sender, string e)
         {
-            Debug.WriteLine("device map updated event");
+            debugMessage("device map updated event");
             //this.AddEventListItem(e, ItemState.ERROR);
         }
 
         static void SA_ConnectionStatusEvent(object sender, SAClientWRC.Status e)
         {
-            Debug.WriteLine("Client status event: " + (e.IsConnected ? "connected" : "not connected"));
+            debugMessage("Client status event: " + (e.IsConnected ? "connected" : "not connected"));
 
             //    this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             //    {
@@ -152,33 +134,33 @@ namespace ReasonCam
 
             if (e.IsReadyToConnect == true)
             {
-                Debug.WriteLine("Device id: " + e.CurrentDeviceID + " is ready to connect");
+                debugMessage("Device id: " + e.CurrentDeviceID + " is ready to connect");
                 CurrentStructureId = e.CurrentStructureID;
                 saclient.Connect();
             }
             else
-                Debug.WriteLine("no configuration found");
+                debugMessage("no configuration found");
 
 
             if (IsConnected == true)
             {
                 commsReady(null);
-                Debug.WriteLine("CONNECTED to server!");
+                debugMessage("CONNECTED to server!");
                 saclient.StartListening();
             }
             else
-                Debug.WriteLine("Connection CLOSED!");
+                debugMessage("Connection CLOSED!");
 
 
             if (e.IsListening == true)
-                Debug.WriteLine("Listening for broadcast");
+                debugMessage("Listening for broadcast");
 
 
             if (e.MessageSent == true)
-                Debug.WriteLine("Message sent!");
+                debugMessage("Message sent!");
 
             if (e.StatusException != "")
-                Debug.WriteLine("Exception occured!: " + e.StatusException);
+                debugMessage("Exception occured!: " + e.StatusException);
 
             //   });
         }
@@ -212,7 +194,7 @@ namespace ReasonCam
 
         static void SA_BroadcastDataArrivedEvent(object sender, SocketData e)
         {
-            Debug.WriteLine("Broadcast data arrived");
+            debugMessage("Broadcast data arrived");
           //  Debug.WriteLine(String.Format("Message received: {0}", e.Message));
          //   Debug.WriteLine(String.Format("Data received: {0}", e.Data));
 
@@ -220,8 +202,8 @@ namespace ReasonCam
             {
              //   SocketData sd = SAHelper.DeserializeToSocketData(e.Message);
 
-                Debug.WriteLine(String.Format("Message received: {0}", e.Message));
-                Debug.WriteLine(String.Format("Data received: {0}", e.Data));
+             //   debugMessage(String.Format("Message received: {0}", e.Message));
+             //   debugMessage(String.Format("Data received: {0}", e.Data));
 
                 TransMessage tm = (TransMessage)SAHelper.ByteArrayObjToObject(e.Data, typeof(TransMessage));
 
@@ -229,19 +211,19 @@ namespace ReasonCam
                 {
                     if (tm.StructureId == CurrentStructureId)
                     {
-                        Debug.WriteLine("RECEIVED MESSAGE - " + tm.ToString());
+                        debugMessage("RECEIVED MESSAGE - " + tm.ToString());
                         processMessage(tm);
                     }
                     else
                     {
-                        Debug.WriteLine("Received message but not for this structure");
+                        debugMessage("Received message but not for this structure");
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("ERROR deserializing: " + ex.Message);
+                debugMessage("ERROR deserializing: " + ex.Message);
             }
 
         }
@@ -254,7 +236,7 @@ namespace ReasonCam
         {
             if (!IsConnected) return;
             TransMessage tm = new TransMessage(command, data, CurrentStructureId);
-            Debug.WriteLine("SENDING MESSAGE - " + tm.ToString());
+            debugMessage("SENDING MESSAGE - " + tm.ToString());
             saclient.SendObject(tm, false);
         }
 

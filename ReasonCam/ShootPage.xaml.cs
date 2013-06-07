@@ -68,13 +68,13 @@ namespace ReasonCam
 
             showView(ViewSelect.Waiting);
 
-            CommsHelper.Initialize();
-            CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
+         //   CommsHelper.Initialize();
 
             CommsHelper.commsReady += client_commsReady;
             CommsHelper.snapTake += client_snapAction;
             CommsHelper.goHome += CommsHelper_goHome;
             CommsHelper.stopReturn += CommsHelper_stopReturn;
+            CommsHelper.debugMessage += CommsHelper_logDebugMessage;
 
 
             EnumerateWebcamsAsync();
@@ -82,8 +82,14 @@ namespace ReasonCam
             Application.Current.Suspending += Current_Suspending;
             Application.Current.Resuming += Current_Resuming;
 
+            addMessage("Snap Array launched");
+
+            // temporary whilst I'm trying to generate the f'ing gif
+         //   this.generateGif();
 
         }
+
+        #region initialization and statemanagement
 
         public async void setupDefaultShots()
         {
@@ -102,7 +108,7 @@ namespace ReasonCam
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("error copying default images: {0}", ex);
+                addMessage(String.Format("error copying default images: {0}", ex));
 
             }
 
@@ -111,37 +117,62 @@ namespace ReasonCam
         void Current_Resuming(object sender, object e)
         {
             //We need to tell the server that this APP instance on this machine is now available
-            CommsHelper.Initialize();
+            if (CommsHelper.saclient == null)
+            {
+                CommsHelper.Initialize();
+                CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
+                addMessage("app resuming - initializing saclient");
+            }
         }
 
         void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {            
             //We need to tell the server that this APP instance on this machine is no longer running
-            CommsHelper.deconstruct();
+            if (CommsHelper.saclient != null)
+            {
+                CommsHelper.saclient.Dispose();
+            }
+
+            CommsHelper.saclient = null;
+            addMessage("app suspending - descturcting client");
         }
 
-        //protected override void OnLostFocus(RoutedEventArgs e)
-        //{
-        //    base.OnLostFocus(e);
-        //    //We need to tell the server that this APP instance on this machine is no longer running
-        //    CommsHelper.deconstruct();
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            addMessage("lost focus fired");
+            
+            if (e.OriginalSource.GetType() != typeof(Windows.UI.Xaml.Controls.Button))
+            {
+                base.OnLostFocus(e);
+                //We need to tell the server that this APP instance on this machine is no longer running
+                if (CommsHelper.saclient != null)
+                {
+                    CommsHelper.saclient.Dispose();
+                }
 
-        //}
+                CommsHelper.saclient = null;
+                addMessage("lost focus - descturcting client");
+            }
+            else
+            {
+                addMessage("skipping socket dispose because sender was of type button");
+            }
 
-        //protected override void OnGotFocus(RoutedEventArgs e)
-        //{
-        //    base.OnGotFocus(e);
+        }
 
-        //    //We need to tell the server that this APP instance on this machine is now available
-        //    CommsHelper.Initialize();
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
 
-        //    CommsHelper.commsReady += client_commsReady;
-        //    CommsHelper.snapTake += client_snapAction;
-        //    CommsHelper.goHome += CommsHelper_goHome;
-        //    CommsHelper.stopReturn += CommsHelper_stopReturn;
-        //    CommsHelper.saclient.InitShareCharmHandler();
-        //    CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
-        //}
+            //We need to tell the server that this APP instance on this machine is now available
+            if (CommsHelper.saclient == null)
+            {
+                CommsHelper.Initialize();
+                CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
+                addMessage("got focus - initializing saclient");
+            }
+
+        }
 
         public async Task<int> totalShots()
         {
@@ -172,6 +203,8 @@ namespace ReasonCam
         {
 
         }
+
+        #endregion
 
         #region View management methods
 
@@ -244,7 +277,7 @@ namespace ReasonCam
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine("Can't get folder number, possible a custom folder has been place without app management");
+                    addMessage("Can't get folder number, possible a custom folder has been place without app management");
                 }
             }
 
@@ -268,13 +301,13 @@ namespace ReasonCam
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine("Can't get folder number, possible a custom folder has been place without app management");
+                    addMessage("Can't get folder number, possible a custom folder has been place without app management");
                 }
             }
 
             string nextSnapFolder = String.Format("{0}_{1}", folderPrefix, (topFolderNumber + 1));
 
-            Debug.WriteLine("next folder: {0}", nextSnapFolder);
+            addMessage(String.Format("next folder: {0}", nextSnapFolder));
 
             return String.Format(nextSnapFolder);
         }
@@ -554,7 +587,7 @@ namespace ReasonCam
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(String.Format("Exception when re-encoding file: {0}", ex.Message));
+                addMessage(String.Format("Exception when re-encoding file: {0}", ex.Message));
             }
 
             await Task.Delay(10);
@@ -578,27 +611,27 @@ namespace ReasonCam
 
            this.showCurrentSequence();
 
-   //        this.generateGif();
+       //    this.generateGif();
         }
 
         private async void generateGif()
         {
-            Debug.WriteLine("Generating Gif");
+            addMessage("Generating Gif");
 
-            IReadOnlyList<IStorageItem> snapList = await currentFolder.GetItemsAsync();
+            StorageFolder gifFolder = await KnownFolders.PicturesLibrary.GetFolderAsync(await this.getCurrentSnapFolder());
+            IReadOnlyList<IStorageItem> snapList = await gifFolder.GetItemsAsync();
+
+            GifMaker gm = new GifMaker(640, 480);
 
             StorageFile currFile = null;
             for (int i = 0; i < snapList.Count; i++)
             {
-                currFile = await currentFolder.GetFileAsync(snapList[i].Name);
-                break;
+                currFile = await gifFolder.GetFileAsync(snapList[i].Name);
+                gm.AppendFrameFile(currFile);
             }
 
-            GifMaker gm = new GifMaker(800, 600);
-            gm.AppenFrameImage(await ImageController.GetImage(currFile));
-
             StorageFile storageFile = await KnownFolders.PicturesLibrary.CreateFileAsync("thegif.gif", CreationCollisionOption.ReplaceExisting);
-            gm.GenerateFromBitmapsAsync(storageFile,20);
+            gm.GenerateFromFilesAsync(storageFile, 200);
         }
 
         private async Task<Windows.Storage.StorageFile> ReencodePhotoAsync(Windows.Storage.StorageFile tempStorageFile, Windows.Storage.FileProperties.PhotoOrientation photoRotation)
@@ -761,7 +794,7 @@ namespace ReasonCam
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("exception caught in sequence: " + ex.Message);
+                addMessage("exception caught in sequence: " + ex.Message);
             }
 
             if (repeat) this.showSequenceForFolder(sf,repeat);
@@ -769,7 +802,7 @@ namespace ReasonCam
 
         void CommsHelper_stopReturn(object sender)
         {
-            Debug.WriteLine("stop sequence selected");
+            addMessage("stop sequence called");
             SnapMessage.Visibility = Visibility.Collapsed;
 
             StartTimers();
@@ -827,6 +860,33 @@ namespace ReasonCam
         private void goHome(object sender, RoutedEventArgs e)
         {
             CommsHelper.sendMessage(CommandMessage.GoHome, null);
+        }
+
+        #endregion
+
+        #region debugmessages
+
+        private void DebugButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (debugListView.Visibility == Windows.UI.Xaml.Visibility.Collapsed) debugListView.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            else if (debugListView.Visibility == Windows.UI.Xaml.Visibility.Visible) debugListView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+        }
+
+        private void addMessage(String message)
+        {
+            int counter = debugListView.Items.Count;
+            ListViewItem lvi = new ListViewItem();
+            lvi.Height = 30;
+            lvi.Content = String.Format("{0} - {1}",counter.ToString(), message);
+            debugListView.Items.Add(lvi);
+
+            debugListView.ScrollIntoView(lvi);
+            Debug.WriteLine(message);
+        }
+
+        private void CommsHelper_logDebugMessage(String message)
+        {
+            this.addMessage(message);
         }
 
         #endregion

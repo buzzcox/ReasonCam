@@ -849,9 +849,9 @@
 
     <Grid Name="karlsgrid" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
-        <Canvas Name="WaitingView" Visibility="Collapsed">
+        <Canvas Name="WaitingView" Visibility="Visible">
 
-            <Image x:Name="screensaverView" Width="1366" />
+            <Image x:Name="screensaverView" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" />
             <Canvas Name="loadingDisplay" Background="#FF009952" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" />
                 
 
@@ -871,8 +871,14 @@
             </Canvas>
 
             <TextBlock Name="tapScreenText" Height="106" Margin="0,590,0,0" TextWrapping="Wrap" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" FontFamily="Segoe UI Light" Text="Tap the screen to get started" FontSize="58.667" TextAlignment="Center"/>
-            <Button Name="ClickThroughButton" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" Click="ClickThroughButton_Click_1" />
+
+            <Button Name="ClickThroughButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" Click="ClickThroughButton_Click_1" >
+                
+
+            </Button>
             <ProgressRing Name="waitingRing" IsActive="True" Height="100" Width="100" Foreground="White" Canvas.Left="1245" Canvas.Top="643" />
+            <Button Name="DebugButton" Content="" Height="85" Width="100" Click="DebugButton_Click_1" Opacity="0"/>
+
         </Canvas>
 
         <Canvas Name="ShootingView" Visibility="Collapsed" Margin="0,0,0,0">
@@ -903,9 +909,9 @@
             <ProgressRing Name="loadingRing" IsActive="True" Canvas.Left="608" Canvas.Top="310" Height="150" Width="150" Foreground="White" />
         </Canvas>
 
-        <Canvas Name="SequenceView" Background="#000000" Visibility="Visible">
-            <Image x:Name="sequenceElement" Width="1366" />
-            <Canvas Name="SnapMessage" Width="1366" Height="768">
+        <Canvas Name="SequenceView" Background="#000000" Visibility="Collapsed">
+            <Image x:Name="sequenceElement" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" />
+            <Canvas Name="SnapMessage" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}">
 
                 <Ellipse x:Name="ReturnCircle" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF002EA4"/>
                 <Ellipse x:Name="ReturnFill" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
@@ -1023,7 +1029,7 @@
                     </Path.RenderTransform>
                 </Path>
 
-                <TextBlock x:Name="SwipteToShareNew" Height="20" TextWrapping="Wrap" Text="Create New ..." Canvas.Top="8" Width="110" FontFamily="Segoe UI Light" FontSize="16" Canvas.Left="9" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+                <TextBlock x:Name="SwipteToShareNew" Height="20" TextWrapping="Wrap" Text="Create New" Canvas.Top="8" Width="110" FontFamily="Segoe UI Light" FontSize="16" Canvas.Left="9" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
                     <TextBlock.RenderTransform>
                         <CompositeTransform/>
                     </TextBlock.RenderTransform>
@@ -1034,9 +1040,12 @@
             <Button Name="CancelButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" Click="CancelButton_Click" />
 
 
-
         </Canvas>
 
+
+        <ListView Name="debugListView" IsEnabled="False" Height="700" Width="1000" BorderBrush="White" BorderThickness="2" Canvas.Left="100" Canvas.Top="-3" AllowDrop="False" SelectionMode="None" Visibility="Collapsed" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Visible">
+            <x:String>Awaiting debug information...</x:String>
+        </ListView>
     </Grid>
 
     <Page.BottomAppBar>
