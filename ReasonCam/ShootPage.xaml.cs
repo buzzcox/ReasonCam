@@ -60,6 +60,9 @@ namespace ReasonCam
 
         bool reasonScreenSaver = true;
 
+        bool offlineMode = true;
+        bool debugMode = false;
+
         public  ShootPage()
         {
             this.InitializeComponent();
@@ -68,7 +71,7 @@ namespace ReasonCam
 
             showView(ViewSelect.Waiting);
 
-         //   CommsHelper.Initialize();
+            CommsHelper.offlineMode = offlineMode;
 
             CommsHelper.commsReady += client_commsReady;
             CommsHelper.snapTake += client_snapAction;
@@ -76,6 +79,7 @@ namespace ReasonCam
             CommsHelper.stopReturn += CommsHelper_stopReturn;
             CommsHelper.debugMessage += CommsHelper_logDebugMessage;
 
+            CommsHelper.Initialize();
 
             EnumerateWebcamsAsync();
 
@@ -113,12 +117,13 @@ namespace ReasonCam
             }
 
         }
-
+        
         void Current_Resuming(object sender, object e)
         {
             //We need to tell the server that this APP instance on this machine is now available
             if (CommsHelper.saclient == null)
             {
+                CommsHelper.offlineMode = this.offlineMode;
                 CommsHelper.Initialize();
                 CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
                 addMessage("app resuming - initializing saclient");
@@ -136,7 +141,7 @@ namespace ReasonCam
             CommsHelper.saclient = null;
             addMessage("app suspending - descturcting client");
         }
-
+        /*
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             addMessage("lost focus fired");
@@ -158,22 +163,25 @@ namespace ReasonCam
                 addMessage("skipping socket dispose because sender was of type button");
             }
 
-        }
+        }*/
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);
 
-            //We need to tell the server that this APP instance on this machine is now available
-            if (CommsHelper.saclient == null)
-            {
-                CommsHelper.Initialize();
-                CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
-                addMessage("got focus - initializing saclient");
-            }
+
+      //      EnumerateWebcamsAsync();
+
+            ////We need to tell the server that this APP instance on this machine is now available
+            //if (CommsHelper.saclient == null)
+            //{
+            //    CommsHelper.Initialize();
+            //    CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
+            //    addMessage("got focus - initializing saclient");
+            //}
 
         }
-
+        
         public async Task<int> totalShots()
         {
             List<StorageFolder> sflist = await folderList();
@@ -478,7 +486,9 @@ namespace ReasonCam
                         deviceList.Add(devInfo);
                     }
 
-                    captureDevice = deviceList[0];
+
+                    captureDevice = deviceList[(deviceList.Count >= 2)?1:0];
+
                     this.startCapture();
                   //  addStatus("Enumerating Webcams completed successfully.");
                 }
@@ -515,6 +525,8 @@ namespace ReasonCam
             catch(Exception){}
 
         }
+
+        // TODO: write stop capture method here
 
         private async void doCountDown()
         {
@@ -689,6 +701,7 @@ namespace ReasonCam
         DispatcherTimer MessageTimer = new DispatcherTimer();
         DispatcherTimer ReturnTimer = new DispatcherTimer();
         DispatcherTimer ShareTimer = new DispatcherTimer();
+        DispatcherTimer OptionsTimer = new DispatcherTimer();
         DispatcherTimer ReturnCounterTimer = new DispatcherTimer();
         int returnCounter = 15;
         private void StartTimers()
@@ -696,17 +709,22 @@ namespace ReasonCam
             MessageTimer.Stop();
             ReturnTimer.Stop();
             ShareTimer.Stop();
+            OptionsTimer.Stop();
             ReturnCounterTimer.Stop();
 
             MessageTimer = null;
             ReturnTimer = null;
             ShareTimer = null;
+            OptionsTimer = null;
             ReturnCounterTimer = null;
 
             ShareTimer = new DispatcherTimer();
             MessageTimer = new DispatcherTimer();
             ReturnTimer = new DispatcherTimer();
+            OptionsTimer = new DispatcherTimer();
             ReturnCounterTimer = new DispatcherTimer();
+
+            Random rnd = new Random();
 
             MessageTimer.Tick += MessageTimer_Tick;
             MessageTimer.Interval = TimeSpan.FromSeconds(45);
@@ -717,9 +735,12 @@ namespace ReasonCam
             ReturnTimer.Start();
 
             ShareTimer.Tick += ShareTimer_Tick;
-            Random rnd = new Random();
-            ShareTimer.Interval = TimeSpan.FromSeconds(rnd.Next(7,14));
+            ShareTimer.Interval = TimeSpan.FromSeconds(rnd.Next(5,20));
             ShareTimer.Start();
+
+            OptionsTimer.Tick += OptionsTimer_Tick;
+            OptionsTimer.Interval = TimeSpan.FromSeconds(rnd.Next(5, 20));
+            OptionsTimer.Start();
 
             returnCounter = 15;
             ReturnCounterTimer.Tick += ReturnCounterTimer_Tick;
@@ -746,14 +767,18 @@ namespace ReasonCam
             MessageTimer.Stop();
             ReturnTimer.Stop();
             ShareTimer.Stop();
+            OptionsTimer.Stop();
             ReturnCounterTimer.Stop();
             showView(ViewSelect.Waiting);
         }
 
         private void ShareTimer_Tick(object sender, object e)
         {
-        //    Share_hint.Visibility = Windows.UI.Xaml.Visibility.Visible;
             ShareAnim.Begin();
+        }
+
+        private void OptionsTimer_Tick(object sender, object e)
+        {
             NewHintAnim.Begin();
         }
 
@@ -868,6 +893,8 @@ namespace ReasonCam
 
         private void DebugButton_Click_1(object sender, RoutedEventArgs e)
         {
+            if (!debugMode) return;
+
             if (debugListView.Visibility == Windows.UI.Xaml.Visibility.Collapsed) debugListView.Visibility = Windows.UI.Xaml.Visibility.Visible;
             else if (debugListView.Visibility == Windows.UI.Xaml.Visibility.Visible) debugListView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }

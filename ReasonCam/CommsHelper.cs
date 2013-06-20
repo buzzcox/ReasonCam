@@ -21,6 +21,8 @@ namespace ReasonCam
         static public bool IsConnected = false;
         static public int CurrentStructureId;
 
+        static public bool offlineMode = false;
+
         public delegate void commsReadyOnline(object sender);
         static public event commsReadyOnline commsReady;
 
@@ -41,6 +43,12 @@ namespace ReasonCam
         {
         //    Messenger.Default.Register<string>(this, NotificationId, m => Console.WriteLine("hello world with context: " + m.Context));
 
+            if (offlineMode)
+            {
+                commsReady(null);
+                return;
+            }
+
             saclient = new SAClientWRC.SAClient(CurrentAppID);
             saclient.InitShareCharmHandler();
 
@@ -60,6 +68,8 @@ namespace ReasonCam
 
         static void SA_JSONDeviceMapUpdatedEvent(object sender, string e)
         {
+            if (offlineMode) return;
+
             //int a = 0;
         //    addStatus("json device map updated event");
             Debug.WriteLine("json device map: " + e);
@@ -67,6 +77,8 @@ namespace ReasonCam
 
         static void SA_DeviceMapUpdatedEvent(object sender, DeviceMap e)
         {
+            if (offlineMode) return;
+
             Debug.WriteLine("device map updated event");
 
             //this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -117,12 +129,16 @@ namespace ReasonCam
 
         static void SA_ExceptionEvent(object sender, string e)
         {
+            if (offlineMode) return;
+
             debugMessage("device map updated event");
             //this.AddEventListItem(e, ItemState.ERROR);
         }
 
         static void SA_ConnectionStatusEvent(object sender, SAClientWRC.Status e)
         {
+            if (offlineMode) return;
+
             debugMessage("Client status event: " + (e.IsConnected ? "connected" : "not connected"));
 
             //    this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -167,12 +183,16 @@ namespace ReasonCam
 
         static void SA_JSONBroadcastDataArrivedEvent(object sender, string e)
         {
+            if (offlineMode) return;
+
             Debug.WriteLine("device map updated event");
             //int a = 0;
         }
 
         static void SA_DataArrivedEvent(object sender, SocketData e)
         {
+            if (offlineMode) return;
+
             Debug.WriteLine("data arrived for me");
 
             //try
@@ -194,6 +214,8 @@ namespace ReasonCam
 
         static void SA_BroadcastDataArrivedEvent(object sender, SocketData e)
         {
+            if (offlineMode) return;
+
             debugMessage("Broadcast data arrived");
           //  Debug.WriteLine(String.Format("Message received: {0}", e.Message));
          //   Debug.WriteLine(String.Format("Data received: {0}", e.Data));
@@ -234,6 +256,25 @@ namespace ReasonCam
 
         static public void sendMessage(CommandMessage command, Object data)
         {
+            if (offlineMode)
+            {
+                switch (command)
+                {
+                    case (CommandMessage.StopReturn):
+                        stopReturn(null);
+                        break;
+                    case (CommandMessage.StartSnap):
+                        snapTake(null);
+                        break;
+                    case (CommandMessage.GoHome):
+                        goHome(null);
+                        break;
+                    default:
+                        break;
+                }
+                return;
+            }
+
             if (!IsConnected) return;
             TransMessage tm = new TransMessage(command, data, CurrentStructureId);
             debugMessage("SENDING MESSAGE - " + tm.ToString());
@@ -242,6 +283,8 @@ namespace ReasonCam
 
         static void processMessage(TransMessage tm)
         {
+            if (offlineMode) return;
+
             switch (tm.Command)
             {
                 case (CommandMessage.StopReturn):
