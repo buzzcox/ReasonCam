@@ -25,8 +25,6 @@ using Windows.Graphics.Imaging;
 using SAClientWRC;
 using Windows.ApplicationModel.DataTransfer;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace ReasonCam
 {
 
@@ -62,6 +60,8 @@ namespace ReasonCam
 
         bool offlineMode = true;
         bool debugMode = false;
+
+        DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();  //<-- share manager
 
         public  ShootPage()
         {
@@ -125,9 +125,10 @@ namespace ReasonCam
             {
                 CommsHelper.offlineMode = this.offlineMode;
                 CommsHelper.Initialize();
-                CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
+             //   CommsHelper.saclient.ShareDataRequested += component_ShareDataRequested;
                 addMessage("app resuming - initializing saclient");
             }
+            dataTransferManager.DataRequested += ShareTextHandler;
         }
 
         void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -140,6 +141,8 @@ namespace ReasonCam
 
             CommsHelper.saclient = null;
             addMessage("app suspending - descturcting client");
+
+            dataTransferManager.DataRequested -= ShareTextHandler;
         }
         /*
         protected override void OnLostFocus(RoutedEventArgs e)
@@ -633,17 +636,18 @@ namespace ReasonCam
             StorageFolder gifFolder = await KnownFolders.PicturesLibrary.GetFolderAsync(await this.getCurrentSnapFolder());
             IReadOnlyList<IStorageItem> snapList = await gifFolder.GetItemsAsync();
 
-            GifMaker gm = new GifMaker(640, 480);
-
-            StorageFile currFile = null;
+            List<StorageFile> imageFrames = new List<StorageFile>();
             for (int i = 0; i < snapList.Count; i++)
             {
-                currFile = await gifFolder.GetFileAsync(snapList[i].Name);
-                gm.AppendFrameFile(currFile);
+                StorageFile currFile = await gifFolder.GetFileAsync(snapList[i].Name);
+                imageFrames.Add(currFile);
             }
 
-            StorageFile storageFile = await KnownFolders.PicturesLibrary.CreateFileAsync("thegif.gif", CreationCollisionOption.ReplaceExisting);
-            gm.GenerateFromFilesAsync(storageFile, 200);
+            StorageFile gifFile = await KnownFolders.PicturesLibrary.CreateFileAsync("thegif.gif", CreationCollisionOption.ReplaceExisting);
+
+            ReasonGifGenerator gm = new ReasonGifGenerator(640, 480);
+
+            await gm.GenerateGif(gifFile, 200, true, imageFrames);
         }
 
         private async Task<Windows.Storage.StorageFile> ReencodePhotoAsync(Windows.Storage.StorageFile tempStorageFile, Windows.Storage.FileProperties.PhotoOrientation photoRotation)
@@ -837,6 +841,19 @@ namespace ReasonCam
 
         #region Share functions
 
+        private void ShareTextHandler(DataTransferManager sender, DataRequestedEventArgs e)
+        {
+            DataRequest request = e.Request;
+            request.Data.Properties.Title = "Snap Array Moment"; // You must have to set title.
+            request.Data.SetBitmap(null);
+        }
+
+        private void Share_Click_1(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager.ShowShareUI();
+        }
+
+        /*
         async void component_ShareDataRequested(object sender, ShareInfo e)
         {
             try
@@ -865,7 +882,7 @@ namespace ReasonCam
                 throw;
             }
         }
-
+        */
 
  
         #endregion

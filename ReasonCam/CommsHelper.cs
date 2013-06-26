@@ -50,7 +50,10 @@ namespace ReasonCam
             }
 
             saclient = new SAClientWRC.SAClient(CurrentAppID);
-            saclient.InitShareCharmHandler();
+            if (!offlineMode)
+            {
+                saclient.InitShareCharmHandler();
+            }
 
             saclient.ConnectionStatusEvent += SA_ConnectionStatusEvent;
             saclient.DataArrivedEvent += SA_DataArrivedEvent;
