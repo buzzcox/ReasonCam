@@ -457,12 +457,6 @@
         </Storyboard>
 
         <Storyboard x:Name="StartAnim">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="glowState" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:3.1" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Gesture">
                 <DiscreteObjectKeyFrame KeyTime="0">
                     <DiscreteObjectKeyFrame.Value>
@@ -853,31 +847,30 @@
 
             <Image x:Name="screensaverView" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" />
             <Canvas Name="loadingDisplay" Background="#FF009952" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" />
-                
+            <Grid x:Name="glowState"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}">
+            	<Ellipse x:Name="Glow" Height="310" Margin="0"  Width="310" StrokeThickness="5" Fill="White" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" HorizontalAlignment="Center">
+            		<Ellipse.RenderTransform>
+            			<CompositeTransform/>
+            		</Ellipse.RenderTransform>
+            	</Ellipse>
+            	<Ellipse x:Name="Circle" HorizontalAlignment="Center" Height="312" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF2BB673" Margin="0"/>
+            	<Ellipse x:Name="Circlefill" HorizontalAlignment="Center" Height="312" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0" Margin="0"/>
+            	<Path x:Name="Gesture" Data="F1M1259.4219,559.1055C1259.4219,569.0255,1251.3419,577.1055,1241.4219,577.1055C1231.4919,577.1055,1223.4219,569.0255,1223.4219,559.1055L1223.4219,518.1055C1223.4219,516.4555,1224.7719,515.1055,1226.4219,515.1055C1228.0719,515.1055,1229.4219,516.4555,1229.4219,518.1055L1229.4219,542.1055C1229.4219,543.2055,1230.3219,544.1055,1231.4219,544.1055C1232.5219,544.1055,1233.4219,543.2055,1233.4219,542.1055C1233.4219,540.4555,1234.7719,539.1055,1236.4219,539.1055C1238.0719,539.1055,1239.4219,540.4555,1239.4219,542.1055L1239.4219,545.1055C1239.4219,546.2055,1240.3219,547.1055,1241.4219,547.1055C1242.5219,547.1055,1243.4219,546.2055,1243.4219,545.1055C1243.4219,543.4555,1244.7719,542.1055,1246.4219,542.1055C1248.0719,542.1055,1249.4219,543.4555,1249.4219,545.1055L1249.4219,548.1055C1249.4219,549.2055,1250.3219,550.1055,1251.4219,550.1055C1252.5219,550.1055,1253.4219,549.2055,1253.4219,548.1055C1253.4219,546.4555,1254.7719,545.1055,1256.4219,545.1055C1258.0719,545.1055,1259.4219,546.4555,1259.4219,548.1055z M1256.4219,541.1055C1255.0819,541.1055,1253.8319,541.4855,1252.7619,542.1355C1251.6429,539.7555,1249.2219,538.1055,1246.4219,538.1055C1245.0819,538.1055,1243.8319,538.4855,1242.7619,539.1355C1241.6429,536.7555,1239.2219,535.1055,1236.4219,535.1055C1235.3519,535.1055,1234.3319,535.3455,1233.4219,535.7855L1233.4219,524.5955C1235.8609,522.5755,1237.4219,519.5255,1237.4219,516.1055C1237.4219,510.0255,1232.5019,505.1055,1226.4219,505.1055C1220.3419,505.1055,1215.4219,510.0255,1215.4219,516.1055C1215.4219,519.5255,1216.9829,522.5755,1219.4219,524.5955L1219.4219,559.1055C1219.4219,571.2355,1229.2919,581.1055,1241.4219,581.1055C1253.5519,581.1055,1263.4219,571.2355,1263.4219,559.1055L1263.4219,548.1055C1263.4219,544.2465,1260.2809,541.1055,1256.4219,541.1055" Fill="#FFF1F2F2" Stretch="Fill" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" Width="96" HorizontalAlignment="Center" VerticalAlignment="Center" Height="152" Margin="40,156,0,0" Visibility="Collapsed">
+            		<Path.RenderTransform>
+            			<CompositeTransform/>
+            		</Path.RenderTransform>
+            	</Path>
+            </Grid>
 
-            <Canvas Name="glowState">
-                <Ellipse x:Name="Glow" HorizontalAlignment="Center" Height="310" Margin="527,228"  Width="310" StrokeThickness="5" Fill="White" RenderTransformOrigin="0.5,0.5">
-                    <Ellipse.RenderTransform>
-                        <CompositeTransform/>
-                    </Ellipse.RenderTransform>
-                </Ellipse>
-                <Ellipse x:Name="Circle" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF2BB673"/>
-                <Ellipse x:Name="Circlefill" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
-                <Path x:Name="Gesture" Data="F1M1259.4219,559.1055C1259.4219,569.0255,1251.3419,577.1055,1241.4219,577.1055C1231.4919,577.1055,1223.4219,569.0255,1223.4219,559.1055L1223.4219,518.1055C1223.4219,516.4555,1224.7719,515.1055,1226.4219,515.1055C1228.0719,515.1055,1229.4219,516.4555,1229.4219,518.1055L1229.4219,542.1055C1229.4219,543.2055,1230.3219,544.1055,1231.4219,544.1055C1232.5219,544.1055,1233.4219,543.2055,1233.4219,542.1055C1233.4219,540.4555,1234.7719,539.1055,1236.4219,539.1055C1238.0719,539.1055,1239.4219,540.4555,1239.4219,542.1055L1239.4219,545.1055C1239.4219,546.2055,1240.3219,547.1055,1241.4219,547.1055C1242.5219,547.1055,1243.4219,546.2055,1243.4219,545.1055C1243.4219,543.4555,1244.7719,542.1055,1246.4219,542.1055C1248.0719,542.1055,1249.4219,543.4555,1249.4219,545.1055L1249.4219,548.1055C1249.4219,549.2055,1250.3219,550.1055,1251.4219,550.1055C1252.5219,550.1055,1253.4219,549.2055,1253.4219,548.1055C1253.4219,546.4555,1254.7719,545.1055,1256.4219,545.1055C1258.0719,545.1055,1259.4219,546.4555,1259.4219,548.1055z M1256.4219,541.1055C1255.0819,541.1055,1253.8319,541.4855,1252.7619,542.1355C1251.6429,539.7555,1249.2219,538.1055,1246.4219,538.1055C1245.0819,538.1055,1243.8319,538.4855,1242.7619,539.1355C1241.6429,536.7555,1239.2219,535.1055,1236.4219,535.1055C1235.3519,535.1055,1234.3319,535.3455,1233.4219,535.7855L1233.4219,524.5955C1235.8609,522.5755,1237.4219,519.5255,1237.4219,516.1055C1237.4219,510.0255,1232.5019,505.1055,1226.4219,505.1055C1220.3419,505.1055,1215.4219,510.0255,1215.4219,516.1055C1215.4219,519.5255,1216.9829,522.5755,1219.4219,524.5955L1219.4219,559.1055C1219.4219,571.2355,1229.2919,581.1055,1241.4219,581.1055C1253.5519,581.1055,1263.4219,571.2355,1263.4219,559.1055L1263.4219,548.1055C1263.4219,544.2465,1260.2809,541.1055,1256.4219,541.1055" Fill="#FFF1F2F2" Stretch="Fill" RenderTransformOrigin="0.5,0.5" Margin="637,354,633,262" UseLayoutRounding="False" Width="96" HorizontalAlignment="Center" VerticalAlignment="Center" Height="152" Visibility="Collapsed">
-                    <Path.RenderTransform>
-                        <CompositeTransform/>
-                    </Path.RenderTransform>
-                </Path>
-            </Canvas>
-
-            <TextBlock Name="tapScreenText" Height="106" Margin="0,590,0,0" TextWrapping="Wrap" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" FontFamily="Segoe UI Light" Text="Tap the screen to get started" FontSize="58.667" TextAlignment="Center"/>
-
+            <Grid Name="textGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}">
+            <TextBlock Name="tapScreenText" Height="106" Margin="0,490,0,0" TextWrapping="Wrap" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" FontFamily="Segoe UI Light" Text="Tap the screen to get started" FontSize="58.667" TextAlignment="Center"/>
+            </Grid>
             <Button Name="ClickThroughButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" Click="ClickThroughButton_Click_1" >
                 
 
             </Button>
             <ProgressRing Name="waitingRing" IsActive="True" Height="100" Width="100" Foreground="White" Canvas.Left="1245" Canvas.Top="643" />
-            <Button Name="DebugButton" Content="" Height="85" Width="100" Click="DebugButton_Click_1" Opacity="0"/>
+            <Button Name="DebugButton" Content="" Height="85" Width="100" Click="DebugButton_Click_1" Opacity="0" d:IsHidden="True"/>
 
         </Canvas>
 
@@ -888,20 +881,17 @@
             </Canvas>
 
             <Canvas Name="SnapScreen" Background="White"  Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}" Opacity="0" />
-            
-            <Canvas Name="TimerView">
 
-                <Ellipse x:Name="TimerCircle" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF24627A"/>
-                <Ellipse x:Name="TimerFill" HorizontalAlignment="Center" Height="312" Margin="527,228" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
+            <Grid Name="TimerView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{Binding ElementName=karlsgrid, Path=ActualWidth}" Height="{Binding ElementName=karlsgrid, Path=ActualHeight}">
 
-                <TextBlock x:Name="txtInfo" FontFamily="Segoe UI Light" Width="255" TextWrapping="Wrap" Text="Ready in..." FontSize="30" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="270" Canvas.Left="555" Height="230" />
+                    <Ellipse x:Name="TimerCircle" HorizontalAlignment="Center" Height="312" VerticalAlignment="Center" Width="312" Stroke="White" StrokeThickness="5" Fill="#FF24627A"/>
+                    <Ellipse x:Name="TimerFill" HorizontalAlignment="Center" Height="312" VerticalAlignment="Center" Width="312" StrokeThickness="5" Fill="White" Opacity="0"/>
 
-                <TextBlock x:Name="txtCounter" FontFamily="Segoe UI Light" Width="255" TextWrapping="Wrap" Text="5" FontSize="200" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Canvas.Top="300" Canvas.Left="555" Height="230" />
- 
+                    <TextBlock x:Name="txtInfo" FontFamily="Segoe UI Light" Width="255" TextWrapping="Wrap" Text="Ready in..." FontSize="30" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Height="230" />
 
-            </Canvas>
+                    <TextBlock x:Name="txtCounter" FontFamily="Segoe UI Light" Width="255" TextWrapping="Wrap" Text="5" FontSize="200" TextAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center" Height="190" />
 
-
+            </Grid>
 
         </Canvas>
 
